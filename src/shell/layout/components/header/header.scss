@@ -1,0 +1,25 @@
+nav {
+  height: 85px;
+  width: 100%;
+  background-color: #ffffff;
+  padding-left: 264px;
+  overflow: hidden;
+
+  .left {
+    margin-left: 24px;
+
+    p {
+      font-size: 22px;
+      line-height: 160%;
+      color: #183b56;
+      font-weight: 600;
+
+      span {
+        color: #a3b1bb;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 170%;
+      }
+    }
+  }
+}

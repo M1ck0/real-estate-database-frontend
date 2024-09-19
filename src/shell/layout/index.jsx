@@ -2,27 +2,35 @@ import React from "react";
 
 import { Routes, Route } from "react-router-dom";
 
-import Header from "./components/header";
+import Sidebar from "./components/sidebar";
 
 import routes from "shell/routes";
 
 import "./layout.css";
-import Sidebar from "shell/layout/components/sidebar";
 
 const Layout = () => {
   return (
     <div className="layout">
-      <Header />
-      <Sidebar>
+      <Sidebar routes={routes}>
         <Routes>
-          {routes.map((route) => {
+          {routes?.map((route) => {
             return (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={<route.component />}
-                exact
-              />
+              <>
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={<route.component />}
+                  exact
+                />
+                {route?.routes?.map((subRoute) => (
+                  <Route
+                    key={subRoute.path}
+                    path={subRoute.path}
+                    element={<subRoute.component />}
+                    exact
+                  />
+                ))}
+              </>
             );
           })}
         </Routes>

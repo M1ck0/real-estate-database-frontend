@@ -6,9 +6,11 @@
       "pages/*": ["src/pages/*"],
       "api/*": ["src/api/*"],
       "shell/*": ["src/shell/*"],
-      "assets/*": ["/assets/*"],
+      "assets/*": ["src/common/assets/*"],
+      "icons/*": ["src/common/assets/icons/*"],
       "state/*": ["src/recoil/*"],
-      "components/*": ["src/common/components/*"]
+      "components/*": ["src/common/components/*"],
+      "client": ["src/client"]
     }
   },
 

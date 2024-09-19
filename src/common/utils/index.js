@@ -12,3 +12,7 @@ export const localStorageEffect =
         : localStorage.setItem(key, JSON.stringify(newValue));
     });
   };
+
+export const classNames = (...classes) => {
+  return classes.filter(Boolean).join(" ");
+};

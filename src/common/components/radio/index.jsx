@@ -23,7 +23,7 @@ const RadioGroup = ({ horizontal, label, data = [], onChange = () => {} }) => {
         aria-label="Server size"
         className={classNames(
           horizontal ? "flex justify-between" : "space-y-3",
-          "w-full mt-2",
+          "mt-2 w-full",
         )}
       >
         {data?.map((item) => (
@@ -37,7 +37,7 @@ const RadioGroup = ({ horizontal, label, data = [], onChange = () => {} }) => {
             <Label
               className={classNames(
                 item === selected ? "text-black" : "text-black/60",
-                "font-medium capitalize text-sm cursor-pointer",
+                "cursor-pointer text-sm font-medium capitalize",
               )}
             >
               {item}

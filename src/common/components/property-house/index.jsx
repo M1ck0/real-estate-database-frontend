@@ -1,14 +1,16 @@
 const PropertyHouse = ({ data }) => {
-  console.log(data);
   return (
     <div className="flex w-[700px]">
-      <div className="h-[600px] w-[400px] bg-gray-200 flex-shrink-0"></div>
+      <div className="h-[600px] w-[400px] flex-shrink-0 bg-gray-200"></div>
       <div>
-        <div className="flex items-center w-[300px] justify-between border-b mb-3 pb-3">
+        <div className="mb-3 flex w-[300px] items-center justify-between border-b pb-3">
           <p className="text-2xl font-semibold">{data?.title}</p>
-          <div className="bg-green-200 rounded-full py-0.5 px-4">
-            <p className="text-black-600 font-semibold text-lg">
-              {new Intl.NumberFormat("en-US").format(data?.price || 0)}
+          <div className="rounded-full bg-green-200 px-4 py-0.5">
+            <p className="text-black-600 text-lg font-semibold">
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "EUR",
+              }).format(data?.price || 0)}
             </p>
           </div>
         </div>

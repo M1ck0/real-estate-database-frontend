@@ -8,11 +8,13 @@ const usePropertyById = (id) => {
   const getData = async () => {
     const { data: property, error } = await supabase
       .from("properties")
-      .select("*")
+      .select(
+        "*, location(id,name), property_amenities(amenity(id, name)), property_images(*)",
+      )
       .eq("id", id)
       .single();
 
-    setData(property);
+    setData({ ...property, images: property?.property_images?.[0]?.links });
   };
 
   useEffect(() => {

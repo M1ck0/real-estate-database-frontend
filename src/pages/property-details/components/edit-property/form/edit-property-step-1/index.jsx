@@ -5,8 +5,9 @@ import { Controller } from "react-hook-form";
 import Input from "common/components/input";
 import Select from "common/components/select";
 import Button from "common/components/button";
-import Textarea from "common/components/textarea";
 import Checkbox from "common/components/checkbox";
+import Textarea from "common/components/textarea";
+import FileUpload from "common/components/file-upload";
 import DatePicker from "common/components/date-picker";
 
 import CreateLocationModal from "common/modals/create-location-modal";
@@ -16,11 +17,10 @@ import useLocations from "common/hooks/use-locations";
 
 import { propertyAvailable, propertyType, propertyStatus } from "common/constants";
 
-const CreatePropertyStep1 = ({ control, watch, setValue }) => {
+const EditPropertyStep1 = ({ setValue, getValues, control, watch }) => {
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   const { data: locations, getData: getLocations } = useLocations();
-
   const { data: amenities } = useAmenities();
 
   const available = watch("available");
@@ -39,6 +39,10 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
   };
 
   useEffect(() => {
+    setSelectedAmenities(getValues("amenities"));
+  }, []);
+
+  useEffect(() => {
     setValue("amenities", selectedAmenities);
   }, [selectedAmenities]);
 
@@ -46,6 +50,13 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
     <div className="mx-auto w-full flex-col justify-center gap-10">
       <h1 className="text-3xl font-semibold">Basic Details</h1>
       <div className="w-full divide-y">
+        <div className="py-8">
+          <FileUpload
+            onChange={(e) => {
+              setValue("images", e.target.files); // Set the file input value
+            }}
+          />
+        </div>
         <Controller
           name="type"
           control={control}
@@ -55,12 +66,13 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
                 <p className="font-semibold">Type</p>
                 <p className="text-sm text-gray-600">Select property type</p>
               </div>
-              <div className="w-[400px]">
-                <Select data={propertyType} placeholder="Select" {...field} />
+              <div className="flex w-[400px] flex-col gap-3">
+                <Select placeholder="Select" data={propertyType} {...field} />
               </div>
             </div>
           )}
         />
+
         <Controller
           name="status"
           control={control}
@@ -70,8 +82,8 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
                 <p className="font-semibold">Status</p>
                 <p className="text-sm text-gray-600">Select property status</p>
               </div>
-              <div className="w-[400px]">
-                <Select data={propertyStatus} placeholder="Select" {...field} />
+              <div className="flex w-[400px] flex-col gap-3">
+                <Select placeholder="Select" data={propertyStatus} {...field} />
               </div>
             </div>
           )}
@@ -134,12 +146,7 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
                 </p>
               </div>
               <div className="w-[400px]">
-                <Select
-                  placeholder="Select"
-                  data={propertyAvailable}
-                  defaultValue="yes"
-                  {...field}
-                />
+                <Select placeholder="Select" data={propertyAvailable} {...field} />
               </div>
             </div>
           )}
@@ -177,7 +184,6 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
                   </div>
                   <div className="flex w-[400px] flex-col gap-3">
                     <Select
-                      key={locations?.length}
                       placeholder="Select"
                       data={locations}
                       defaultValue="yes"
@@ -233,7 +239,7 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
                 <p className="text-sm text-gray-600">What floor is the property on</p>
               </div>
               <div className="flex w-[400px] flex-col gap-3">
-                <Input label="Floor" placeholder="3" {...field} />
+                <Input {...field} />
               </div>
             </div>
           )}
@@ -248,6 +254,7 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
               {amenities?.map((item) => (
                 <Checkbox
                   label={item?.name}
+                  value={getValues("amenities")?.includes(item?.id)}
                   onChange={(value) => onCheckboxChange(item, value)}
                 />
               ))}
@@ -308,4 +315,4 @@ const CreatePropertyStep1 = ({ control, watch, setValue }) => {
   );
 };
 
-export default CreatePropertyStep1;
+export default EditPropertyStep1;

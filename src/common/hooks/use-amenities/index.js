@@ -2,26 +2,22 @@ import { useEffect, useState } from "react";
 
 import { supabase } from "client";
 
-const useClients = () => {
+const useAmenities = () => {
   const [data, setData] = useState([]);
 
   const getData = async () => {
     try {
-      const { data: clients, error } = await supabase
-        .from("clients")
-        .select("*, client_preferences(*, location(*))");
+      const { data: amenities, error } = await supabase
+        .from("amenities")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Error fetching data:", error);
         return;
       }
 
-      setData(
-        clients?.map((item) => ({
-          ...item,
-          client_preferences: item?.client_preferences[0],
-        })),
-      );
+      setData(amenities);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -34,4 +30,4 @@ const useClients = () => {
   return { data, getData };
 };
 
-export default useClients;
+export default useAmenities;

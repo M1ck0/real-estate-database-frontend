@@ -20,11 +20,11 @@ const Checkbox = ({ label, value, onChange = () => {} }) => {
       <C
         checked={enabled}
         onChange={onCheckboxChange}
-        className="group justify-center size-5 border cursor-pointer rounded-md flex items-center bg-white data-[checked]:bg-blue-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[checked]:data-[disabled]:bg-gray-500"
+        className="group flex size-5 cursor-pointer items-center justify-center rounded-md border bg-white data-[disabled]:cursor-not-allowed data-[checked]:bg-blue-500 data-[checked]:data-[disabled]:bg-gray-500 data-[disabled]:opacity-50"
       >
         <CheckIcon className="hidden size-4 fill-white group-data-[checked]:block" />
       </C>
-      {label ? <Label className="capitalize cursor-pointer">{label}</Label> : null}
+      {label ? <Label className="cursor-pointer capitalize">{label}</Label> : null}
     </Field>
   );
 };

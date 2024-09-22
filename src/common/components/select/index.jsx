@@ -14,24 +14,24 @@ const Select = ({ data, label, placeholder, value, onChange = () => {} }) => {
   const [selected, setSelected] = useState();
 
   useEffect(() => {
-    if (value !== undefined && !selected) {
-      const defaultItem = data?.find((item) => {
-        if (
-          item?.id?.toString() === value?.toString() ||
-          item?.value?.toString() === value?.toString() ||
-          item?.name?.toString() === value?.toString()
-        ) {
-          return item;
-        }
-      });
+    if (value && (!selected || value !== selected.value)) {
+      const defaultItem = data?.find((item) =>
+        [
+          item?.id?.toString()?.toLowerCase(),
+          item?.value?.toString()?.toLowerCase(),
+          item?.name?.toString()?.toLowerCase(),
+        ].includes(value?.toString()?.toLowerCase()),
+      );
 
-      onSelect(defaultItem);
+      if (defaultItem) {
+        onSelect(defaultItem); // This ensures the effect runs only when needed.
+      }
     }
-  }, [value, selected]);
+  }, [value, data, selected]); // Added 'data' to the dependency array
 
   const onSelect = (item) => {
-    setSelected(item);
-    onChange(item);
+    setSelected({ name: item?.name, value: item?.value || item?.id });
+    onChange({ name: item?.name, value: item?.value || item?.id });
   };
 
   return (
@@ -44,7 +44,7 @@ const Select = ({ data, label, placeholder, value, onChange = () => {} }) => {
         ) : null}
 
         <div className="relative mt-1">
-          <ListboxButton className="relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 cursor-pointer">
+          <ListboxButton className="relative w-full cursor-pointer rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span
               className={classNames(selected?.name ? "" : "opacity-40", "block truncate")}
             >
@@ -57,13 +57,13 @@ const Select = ({ data, label, placeholder, value, onChange = () => {} }) => {
 
           <ListboxOptions
             transition
-            className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
+            className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white p-1 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
           >
             {data?.map((item) => (
               <ListboxOption
                 key={item.id}
                 value={item}
-                className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-indigo-600 data-[focus]:text-white"
+                className="group relative cursor-pointer select-none rounded py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-indigo-600 data-[focus]:text-white"
               >
                 <span className="block truncate font-normal group-data-[selected]:font-semibold">
                   {item.name}

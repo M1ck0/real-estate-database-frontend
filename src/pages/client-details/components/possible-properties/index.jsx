@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Link } from "react-router-dom";
-import { EnvelopeIcon, PhoneIcon, UserIcon } from "@heroicons/react/20/solid";
+import { PhoneIcon, UserIcon } from "@heroicons/react/20/solid";
 
 import Badge from "common/components/badge";
 import Table from "common/components/table";
@@ -15,39 +15,46 @@ const header = [
     accessor: "*",
     render: (data) => <Link to={`/properties/${data?.id}`}>{data?.title}</Link>,
   },
-  { name: "Location", accessor: "location", render: (data) => data?.name || "/" },
   {
     name: "Type",
     accessor: "type",
-    render: (data) => <span className="capitalize">{data}</span>,
-  },
-  {
-    name: "Available",
-    accessor: "available",
-    render: (data) => <Badge text={data ? "Yes" : "No"} />,
+    render: (data) => <Badge text={data || "/"} />,
   },
   {
     name: "Status",
     accessor: "status",
     render: (data) => <Badge text={data?.toUpperCase()} />,
   },
-  { name: "Bathrooms", accessor: "bathrooms" },
+
+  { name: "Floor", accessor: "floor", render: (data) => data ?? "/" },
   { name: "Bedrooms", accessor: "bedrooms" },
+  { name: "Bathrooms", accessor: "bathrooms" },
   {
     name: "Price",
     accessor: "price",
-    render: (data) => new Intl.NumberFormat("en-US").format(data || 0),
+    render: (data) =>
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
+        data || 0,
+      ),
   },
+
+  { name: "Location", accessor: "location", render: (data) => data?.name || "/" },
+  // {
+  //   name: "Available",
+  //   accessor: "available",
+  //   render: (data) => <Badge text={data ? "Yes" : "No"} />,
+  // },
 ];
 
 const matches = {
   price: true,
-  bedrooms: true,
-  bathrooms: true,
-  floor: true,
-  type: true,
+  type: false,
   status: true,
-  location: true,
+  floor: false,
+  bedrooms: false,
+  bathrooms: false,
+  location: false,
+  type: false,
 };
 
 const PossibleProperties = ({ data }) => {
@@ -56,6 +63,8 @@ const PossibleProperties = ({ data }) => {
 
   const getData = async () => {
     const query = supabase.from("properties").select("*, location(name)");
+
+    query.eq("available", true);
 
     if (matchBy?.price === true) {
       query.gte("price", data?.min_price);
@@ -67,7 +76,7 @@ const PossibleProperties = ({ data }) => {
     }
 
     if (matchBy?.bathrooms === true) {
-      query.gte("bathrooms", data?.bathrooms);
+      query.gte("bathrooms", data?.bathrooms || 0);
     }
 
     if (matchBy?.type === true) {
@@ -75,11 +84,11 @@ const PossibleProperties = ({ data }) => {
     }
 
     if (matchBy?.status === true) {
-      query.eq("status", data?.property_status);
+      query.eq("status", data?.status);
     }
 
     if (matchBy?.location === true) {
-      query.eq("location", data?.preferred_location?.id);
+      query.eq("location", data?.location?.id);
     }
 
     const { data: properties, error } = await query;
@@ -99,19 +108,18 @@ const PossibleProperties = ({ data }) => {
     }
   }, [JSON.stringify(matchBy), data]);
 
-  console.log(properties);
-
   const items = {
-    budget: data?.min_price
-      ? `${new Intl.NumberFormat("en-US").format(data?.min_price || 0)} - 
-              ${new Intl.NumberFormat("en-US").format(data?.max_price || 0)}`
-      : "/",
-    location: data?.preferred_location?.name || "/",
+    budget:
+      data?.min_price >= 0
+        ? `${new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(data?.min_price || 0)} - 
+              ${new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(data?.max_price || 0)}`
+        : "/",
+    location: data?.location?.name || "/",
     type: data?.type || "/",
-    floor: data?.floor || "/",
-    status: data?.property_status || "/",
-    bedrooms: data?.bedrooms || "/",
-    bathrooms: data?.bathrooms || "/",
+    floor: data?.floor ?? "/",
+    status: data?.status || "/",
+    bedrooms: data?.bedrooms ?? "/",
+    bathrooms: data?.bathrooms ?? "/",
   };
 
   return (
@@ -142,16 +150,16 @@ const PossibleProperties = ({ data }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-[500px] justify-between">
+        <div className="flex w-[500px] flex-col justify-between">
           {Object.entries(items).map(([key, value]) => (
-            <div className="flex items-center w-full border-b py-2 justify-between">
+            <div className="flex w-full items-center justify-between border-b py-2">
               <p className="capitalize">{key}</p>
               <p className="capitalize">{value}</p>
             </div>
           ))}
         </div>
       </div>
-      <h2 className="text-xl font-semibold mb-4 mt-5">
+      <h2 className="mb-4 mt-10 text-xl font-semibold">
         Possible properties ({properties?.length})
       </h2>
       <div className="mb-4 grid grid-cols-7 gap-5">

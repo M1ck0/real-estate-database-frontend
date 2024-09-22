@@ -1,6 +1,6 @@
 const Card = ({ title, children }) => {
   return (
-    <div className="bg-white rounded-lg border w-full h-full px-4">
+    <div className="h-full w-full rounded-lg border bg-white px-4">
       {title ? (
         <div className="border-b py-3">
           <p className="text-base font-normal">{title}</p>

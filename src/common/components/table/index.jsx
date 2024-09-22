@@ -86,7 +86,7 @@ const Table = ({
                             key={i}
                             className={classNames(
                               col?.sticky ? "sticky right-0 bg-white text-center" : "",
-                              "relative whitespace-nowrap py-[10.5px] px-5 text-[13px] font-medium text-gray-700",
+                              "relative whitespace-nowrap px-5 py-[10.5px] text-[13px] font-medium text-gray-700",
                             )}
                             style={{ zIndex: col?.sticky ? perPage * 2 - idx : "" }}
                           >

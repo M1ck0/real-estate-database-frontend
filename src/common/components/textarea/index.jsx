@@ -15,22 +15,10 @@ const Textarea = ({
     }
   }, [value]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      onChange(text);
-    }, debounceDelay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [text, debounceDelay]);
-
   const onInputChange = (e) => {
     setText(e.target.value);
 
-    if (e.target.value === "") {
-      onChange("");
-    }
+    onChange(e.target.value);
   };
 
   return (

@@ -1,23 +1,67 @@
 import { useEffect, useState } from "react";
 
-import Checkbox from "common/components/checkbox";
-
-import Table from "common/components/table";
-import Button from "common/components/button";
-
-import { supabase } from "client";
 import { Link } from "react-router-dom";
 
-const matches = { price: true, bedrooms: true, bathrooms: true, floor: true, type: true };
+import Badge from "common/components/badge";
+import Table from "common/components/table";
+import Button from "common/components/button";
+import Checkbox from "common/components/checkbox";
+
+import { supabase } from "client";
+
+const matches = {
+  price: true,
+  type: false,
+  status: true,
+  floor: false,
+  bedrooms: false,
+  bathrooms: false,
+  location: false,
+  type: false,
+};
 
 const header = [
-  // { name: "id", accessor: "client", render: (data) => data?.id },
   {
     name: "Name",
     accessor: "*",
     render: (data) => (
       <Link to={`/clients/${data?.client?.id}`}>{data?.client?.name}</Link>
     ),
+  },
+  {
+    name: "Type",
+    accessor: "type",
+    render: (data) => <Badge text={data || "/"} />,
+  },
+  {
+    name: "Status",
+    accessor: "status",
+    render: (data) => <Badge text={data?.toUpperCase()} />,
+  },
+
+  { name: "Floor", accessor: "floor", render: (data) => data ?? "/" },
+  { name: "Bedrooms", accessor: "bedrooms", render: (data) => data || "/" },
+  { name: "Bathrooms", accessor: "bathrooms", render: (data) => data || "/" },
+  {
+    name: "Min price",
+    accessor: "min_price",
+    render: (data) =>
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
+        data || 0,
+      ),
+  },
+  {
+    name: "Max price",
+    accessor: "max_price",
+    render: (data) =>
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
+        data || 0,
+      ),
+  },
+  {
+    name: "Location",
+    accessor: "location",
+    render: (data) => data?.name || "/",
   },
   { name: "Number", accessor: "client", render: (data) => data?.phone_number },
   { name: "Actions", accessor: "*", render: (data) => <Actions data={data} /> },
@@ -38,37 +82,49 @@ const PossibleClients = ({ data }) => {
   const [matchBy, setMatchBy] = useState(matches);
 
   const getData = async () => {
-    const query = supabase.from("client_preferences").select("*, client(*)");
+    const query = supabase.from("client_preferences").select("*, client(*), location(*)");
 
     if (matchBy?.price === true) {
-      query.gte("min_price", data?.price);
-      query.lte("max_price", data?.price);
-    }
-
-    if (matchBy?.bedrooms === true) {
-      query.gte("bedrooms", data?.bedrooms);
-    }
-
-    if (matchBy?.bathrooms === true) {
-      query.gte("bathrooms", data?.bathrooms);
+      query.lte("min_price", data?.price); // Clients with min_price <= propertyPrice
+      query.gte("max_price", data?.price);
     }
 
     if (matchBy?.type === true) {
       query.eq("type", data?.type);
     }
 
-    const { data: properties, error } = await query;
+    if (matchBy?.status === true) {
+      query.eq("status", data?.status);
+    }
+
+    if (matchBy?.location === true) {
+      query.eq("location", data?.location?.id);
+    }
+
+    if (matchBy?.bedrooms === true) {
+      query.lte("bedrooms", 100);
+    }
+
+    if (matchBy?.bathrooms === true) {
+      query.lte("bathrooms", 100);
+    }
+
+    if (matchBy?.floor === true) {
+      query.eq("floor", data?.floor);
+    }
+
+    if (matchBy?.type === true) {
+      query.eq("type", data?.type);
+    }
+
+    const { data: possibleClients, error } = await query;
 
     if (!error) {
-      setClients(properties);
+      setClients(possibleClients);
     }
   };
 
   const onFilterChange = (value, name) => {
-    // const newObject = { ...matchBy, [name]: value };
-    //
-    // console.log(newObject);
-
     setMatchBy((prevState) => ({ ...prevState, [name]: value }));
   };
 
@@ -80,7 +136,7 @@ const PossibleClients = ({ data }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Possible buyers ({clients?.length})</h2>
+      <h2 className="mb-4 text-xl font-semibold">Possible buyers ({clients?.length})</h2>
       <div className="mb-4 grid grid-cols-7 gap-5">
         {Object.entries(matchBy)?.map(([key, value]) => (
           <Checkbox

@@ -13,7 +13,7 @@ import PropertyDetails from "pages/property-details";
 
 const router = [
   {
-    name: "Properties",
+    name: "Nekretnine",
     path: "/properties/*",
     link: "/properties",
     component: () => <Properties />,
@@ -37,7 +37,7 @@ const router = [
     ],
   },
   {
-    name: "Clients",
+    name: "Klijenti",
     path: "/clients/*",
     link: "/clients",
     component: () => <Clients />,
@@ -53,10 +53,15 @@ const router = [
         path: "/clients/new",
         component: () => <CreateClient />,
       },
+      {
+        name: "Edit Client",
+        path: "/clients/edit/:clientId",
+        component: () => <CreateClient />,
+      },
     ],
   },
   {
-    name: "Settings",
+    name: "Opcije",
     path: "/settings/*",
     link: "/settings",
     component: () => <Settings />,

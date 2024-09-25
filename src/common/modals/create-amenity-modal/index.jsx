@@ -31,19 +31,22 @@ const CreateAmenityModal = ({ onComplete = () => {} }) => {
 
   return (
     <div>
-      <Modal active={open} onClose={toggleModal} title="Create new amenity">
-        <form onSubmit={handleSubmit(onSubmit)} className="w-[400px] space-y-5">
+      <Modal active={open} onClose={toggleModal} title="Dodaj novu pogodnost">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-[400px] max-w-full space-y-5"
+        >
           <Controller
             name="name"
             control={control}
             render={({ field }) => (
-              <Input label="Location" placeholder="Location name" {...field} />
+              <Input label="Ime" placeholder="Naziv pogodnosti" {...field} />
             )}
           />
           <Button type="submit">Save</Button>
         </form>
       </Modal>
-      <Button onClick={toggleModal}>Create New Amenity</Button>
+      <Button onClick={toggleModal}>Dodaj pogodnost</Button>
     </div>
   );
 };

@@ -16,23 +16,23 @@ import {
 
 import { sortByName } from "common/utils";
 
-const CreateClientStep1 = ({ control }) => {
+const CreateClientStep1 = ({ clientId, control }) => {
   const { data: locations } = useLocations();
 
   return (
-    <div className="mx-auto w-full flex-col justify-center gap-10">
-      <h1 className="text-3xl font-semibold">Client Details</h1>
-      <div className="w-full divide-y">
+    <div className="mx-auto flex-col justify-center gap-10 lg:w-full">
+      <h1 className="text-3xl font-semibold">Detalji klijenta</h1>
+      <div className="divide-y lg:w-full">
         <Controller
           name="name"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Name</p>
-                <p className="text-sm text-gray-600">Client name</p>
+                <p className="font-semibold">Ime</p>
+                <p className="text-sm text-gray-600">Ime klijenta</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Input {...field} />
               </div>
             </div>
@@ -42,12 +42,12 @@ const CreateClientStep1 = ({ control }) => {
           name="phone"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Phone</p>
-                <p className="text-sm text-gray-600">Client phone number</p>
+                <p className="font-semibold">Telefon</p>
+                <p className="text-sm text-gray-600">Telefonski broj klijenta</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Input {...field} />
               </div>
             </div>
@@ -57,12 +57,12 @@ const CreateClientStep1 = ({ control }) => {
           name="minPrice"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Min Price</p>
-                <p className="text-sm text-gray-600">Client min price</p>
+                <p className="font-semibold">Cijena od</p>
+                <p className="text-sm text-gray-600">Minimalna cijena</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Input prefix="€" {...field} />
               </div>
             </div>
@@ -72,12 +72,12 @@ const CreateClientStep1 = ({ control }) => {
           name="maxPrice"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Max Price</p>
-                <p className="text-sm text-gray-600">Client max price</p>
+                <p className="font-semibold">Cijena do</p>
+                <p className="text-sm text-gray-600">Maksimalna cijena</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Input prefix="€" {...field} />
               </div>
             </div>
@@ -87,12 +87,12 @@ const CreateClientStep1 = ({ control }) => {
           name="location"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Location</p>
-                <p className="text-sm text-gray-600">Preferred location</p>
+                <p className="font-semibold">Lokacija</p>
+                <p className="text-sm text-gray-600">Željena lokacija</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Select placeholder="Select" data={sortByName(locations)} {...field} />
               </div>
             </div>
@@ -102,12 +102,12 @@ const CreateClientStep1 = ({ control }) => {
           name="type"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Type</p>
-                <p className="text-sm text-gray-600">Property type</p>
+                <p className="font-semibold">Tip</p>
+                <p className="text-sm text-gray-600">Tip nekretnine</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Select placeholder="Select" data={propertyType} {...field} />
               </div>
             </div>
@@ -117,12 +117,12 @@ const CreateClientStep1 = ({ control }) => {
           name="status"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
                 <p className="font-semibold">Status</p>
-                <p className="text-sm text-gray-600">Property status</p>
+                <p className="text-sm text-gray-600">Status nekretnine</p>
               </div>
-              <div className="w-[400px]">
+              <div className="lg:w-[400px]">
                 <Select placeholder="Select" data={propertyStatus} {...field} />
               </div>
             </div>
@@ -132,12 +132,12 @@ const CreateClientStep1 = ({ control }) => {
           name="bedrooms"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Bedrooms</p>
-                <p className="text-sm text-gray-600">Select number of bedrooms</p>
+                <p className="font-semibold">Sobe</p>
+                <p className="text-sm text-gray-600">Željeni broj soba</p>
               </div>
-              <div className="flex w-[400px] flex-col gap-3">
+              <div className="flex flex-col gap-3 lg:w-[400px]">
                 <Input {...field} />
               </div>
             </div>
@@ -147,12 +147,12 @@ const CreateClientStep1 = ({ control }) => {
           name="bathrooms"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Bathrooms</p>
-                <p className="text-sm text-gray-600">Select number of bathrooms</p>
+                <p className="font-semibold">Kupatilo</p>
+                <p className="text-sm text-gray-600">Željeni broj kupatila</p>
               </div>
-              <div className="flex w-[400px] flex-col gap-3">
+              <div className="flex flex-col gap-3 lg:w-[400px]">
                 <Input {...field} />
               </div>
             </div>
@@ -162,12 +162,12 @@ const CreateClientStep1 = ({ control }) => {
           name="floor"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center justify-between py-8">
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
               <div>
-                <p className="font-semibold">Floor</p>
-                <p className="text-sm text-gray-600">Preferred floor</p>
+                <p className="font-semibold">Sprat</p>
+                <p className="text-sm text-gray-600">Željeni sprat</p>
               </div>
-              <div className="flex w-[400px] flex-col gap-3">
+              <div className="flex flex-col gap-3 lg:w-[400px]">
                 <Input {...field} />
               </div>
             </div>
@@ -175,7 +175,9 @@ const CreateClientStep1 = ({ control }) => {
         />
 
         <div className="flex justify-end border-t pt-4">
-          <Button type="submit">Create Client</Button>
+          <Button type="submit">
+            {clientId ? "Izmijeni klijenta" : "Kreiraj klijenta"}
+          </Button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Link } from "react-router-dom";
+import { PencilSquareIcon } from "@heroicons/react/16/solid";
 
 import Input from "common/components/input";
 import Badge from "common/components/badge";
@@ -12,16 +13,16 @@ import useClients from "common/hooks/use-clients";
 
 const header = [
   {
-    name: "Name",
+    name: "Ime",
     accessor: "*",
     render: (data) => <Link to={`/clients/${data?.id}`}>{data?.name}</Link>,
   },
   {
-    name: "Phone Number",
+    name: "Broj telefona",
     accessor: "phone_number",
   },
   {
-    name: "Type",
+    name: "Tip nekretnine",
     accessor: "client_preferences",
     render: (data) => <Badge text={data?.type || "/"} />,
   },
@@ -30,24 +31,24 @@ const header = [
     accessor: "client_preferences",
     render: (data) => <Badge text={data?.status?.toUpperCase()} />,
   },
-  { name: "Floor", accessor: "client_preferences", render: (data) => data?.floor || "/" },
+  { name: "Sprat", accessor: "client_preferences", render: (data) => data?.floor || "/" },
   {
-    name: "Bedrooms",
+    name: "Sobe",
     accessor: "client_preferences",
     render: (data) => data?.bedrooms || "/",
   },
   {
-    name: "Bathrooms",
+    name: "Kupatila",
     accessor: "client_preferences",
     render: (data) => data?.bathrooms || "/",
   },
   {
-    name: "Location",
+    name: "Lokacija",
     accessor: "client_preferences",
     render: (data) => data?.location?.name || "/",
   },
   {
-    name: "Min price",
+    name: "Minimalna cijena",
     accessor: "client_preferences",
     render: (data) =>
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
@@ -55,12 +56,21 @@ const header = [
       ) ?? "/",
   },
   {
-    name: "Max price",
+    name: "Maksimalna cijena",
     accessor: "client_preferences",
     render: (data) =>
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
         data?.max_price || 0,
       ) ?? "/",
+  },
+  {
+    name: "Akcije",
+    accessor: "*",
+    render: (data) => (
+      <Link to={`/clients/edit/${data?.id}`} className="text-blue-500">
+        <PencilSquareIcon className="size-6" />
+      </Link>
+    ),
   },
 ];
 
@@ -75,14 +85,18 @@ const Clients = () => {
 
   return (
     <div>
-      <div className="mb-5 flex items-center justify-between">
-        <PageTitle>Clients</PageTitle>
+      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-0">
+        <PageTitle>Klijenti</PageTitle>
         <Link to="/clients/new">
-          <Button>Create New Client</Button>
+          <Button>Kreiraj novog klijenta</Button>
         </Link>
       </div>
       <div className="mb-5 w-[300px]">
-        <Input label="Search" placeholder="Search..." onChange={setSearchText} />
+        <Input
+          label="Pretraga"
+          placeholder="Tekst pretrage..."
+          onChange={setSearchText}
+        />
       </div>
 
       <Table

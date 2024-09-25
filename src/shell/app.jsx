@@ -6,15 +6,18 @@ import Login from "pages/login";
 import DashboardLayout from "./layout";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { RecoilRoot } from "recoil";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" exact element={<Login />} />
-        <Route path="*" element={<DashboardLayout />} />
-      </Routes>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" exact element={<Login />} />
+          <Route path="*" element={<DashboardLayout />} />
+        </Routes>
+      </BrowserRouter>
+    </RecoilRoot>
   );
 };
 

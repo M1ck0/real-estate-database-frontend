@@ -1,6 +1,8 @@
+import { ArrowPathIcon } from "@heroicons/react/16/solid";
+
 import { classNames } from "common/utils";
 
-const Button = ({ children, color, size, ...props }) => {
+const Button = ({ children, loading, color, size, ...props }) => {
   if (color === "red") {
     return (
       <button
@@ -11,7 +13,7 @@ const Button = ({ children, color, size, ...props }) => {
         )}
         {...props}
       >
-        {children}
+        {loading ? <ArrowPathIcon className="size-4 animate-spin" /> : children}
       </button>
     );
   } else {
@@ -24,7 +26,7 @@ const Button = ({ children, color, size, ...props }) => {
         )}
         {...props}
       >
-        {children}
+        {loading ? <ArrowPathIcon className="size-4 animate-spin" /> : children}
       </button>
     );
   }

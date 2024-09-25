@@ -10,26 +10,25 @@ import Checkbox from "common/components/checkbox";
 import { supabase } from "client";
 
 const matches = {
-  price: true,
-  type: false,
+  cijena: true,
+  tip: false,
   status: true,
-  floor: false,
-  bedrooms: false,
-  bathrooms: false,
-  location: false,
-  type: false,
+  sprat: false,
+  sobe: false,
+  kupatila: false,
+  lokacija: false,
 };
 
 const header = [
   {
-    name: "Name",
+    name: "Ime",
     accessor: "*",
     render: (data) => (
       <Link to={`/clients/${data?.client?.id}`}>{data?.client?.name}</Link>
     ),
   },
   {
-    name: "Type",
+    name: "Tip",
     accessor: "type",
     render: (data) => <Badge text={data || "/"} />,
   },
@@ -39,11 +38,11 @@ const header = [
     render: (data) => <Badge text={data?.toUpperCase()} />,
   },
 
-  { name: "Floor", accessor: "floor", render: (data) => data ?? "/" },
-  { name: "Bedrooms", accessor: "bedrooms", render: (data) => data || "/" },
-  { name: "Bathrooms", accessor: "bathrooms", render: (data) => data || "/" },
+  { name: "Sprat", accessor: "floor", render: (data) => data ?? "/" },
+  { name: "Sobe", accessor: "bedrooms", render: (data) => data || "/" },
+  { name: "Kuptaila", accessor: "bathrooms", render: (data) => data || "/" },
   {
-    name: "Min price",
+    name: "Minimalna cijena",
     accessor: "min_price",
     render: (data) =>
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
@@ -51,7 +50,7 @@ const header = [
       ),
   },
   {
-    name: "Max price",
+    name: "Maksimalna cijena",
     accessor: "max_price",
     render: (data) =>
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
@@ -59,19 +58,19 @@ const header = [
       ),
   },
   {
-    name: "Location",
+    name: "Lokacija",
     accessor: "location",
     render: (data) => data?.name || "/",
   },
-  { name: "Number", accessor: "client", render: (data) => data?.phone_number },
-  { name: "Actions", accessor: "*", render: (data) => <Actions data={data} /> },
+  { name: "Broj", accessor: "client", render: (data) => data?.phone_number },
+  { name: "Akcije", accessor: "*", render: (data) => <Actions data={data} /> },
 ];
 
 const Actions = ({ data }) => {
   return (
     <div>
       <a href={`tel:${data?.client?.phoneNumber}`}>
-        <Button>Call Client</Button>
+        <Button>Pozovi klijenta</Button>
       </a>
     </div>
   );
@@ -84,12 +83,12 @@ const PossibleClients = ({ data }) => {
   const getData = async () => {
     const query = supabase.from("client_preferences").select("*, client(*), location(*)");
 
-    if (matchBy?.price === true) {
+    if (matchBy?.cijena === true) {
       query.lte("min_price", data?.price); // Clients with min_price <= propertyPrice
       query.gte("max_price", data?.price);
     }
 
-    if (matchBy?.type === true) {
+    if (matchBy?.tip === true) {
       query.eq("type", data?.type);
     }
 
@@ -97,23 +96,23 @@ const PossibleClients = ({ data }) => {
       query.eq("status", data?.status);
     }
 
-    if (matchBy?.location === true) {
+    if (matchBy?.lokacija === true) {
       query.eq("location", data?.location?.id);
     }
 
-    if (matchBy?.bedrooms === true) {
+    if (matchBy?.sobe === true) {
       query.lte("bedrooms", 100);
     }
 
-    if (matchBy?.bathrooms === true) {
+    if (matchBy?.kupatila === true) {
       query.lte("bathrooms", 100);
     }
 
-    if (matchBy?.floor === true) {
+    if (matchBy?.sprat === true) {
       query.eq("floor", data?.floor);
     }
 
-    if (matchBy?.type === true) {
+    if (matchBy?.tip === true) {
       query.eq("type", data?.type);
     }
 
@@ -136,8 +135,8 @@ const PossibleClients = ({ data }) => {
 
   return (
     <div>
-      <h2 className="mb-4 text-xl font-semibold">Possible buyers ({clients?.length})</h2>
-      <div className="mb-4 grid grid-cols-7 gap-5">
+      <h2 className="mb-4 text-xl font-semibold">Mogući kupci ({clients?.length})</h2>
+      <div className="mb-4 grid grid-cols-3 gap-5 sm:grid-cols-4 lg:grid-cols-7">
         {Object.entries(matchBy)?.map(([key, value]) => (
           <Checkbox
             label={key}

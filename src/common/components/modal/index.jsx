@@ -19,7 +19,7 @@ const Modal = ({ active, title, children, onClose = () => {} }) => {
     >
       <DialogBackdrop className="fixed inset-0 bg-black/30" />
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <DialogPanel className="rounded-lg bg-white p-4">
+        <DialogPanel className="max-w-[90vw] rounded-lg bg-white p-4">
           <DialogTitle className="mb-3 flex items-center justify-between border-b pb-3 text-xl font-semibold">
             {title}
             <XMarkIcon className="size-6 cursor-pointer" onClick={onClose} />

@@ -31,13 +31,13 @@ const CreateLocationModal = ({ onComplete = () => {} }) => {
 
   return (
     <div>
-      <Modal active={open} onClose={toggleModal} title="Create new location">
-        <div className="w-[400px] space-y-5">
+      <Modal active={open} onClose={toggleModal} title="Dodaj novu lokaciju">
+        <div className="w-[400px] max-w-full space-y-5">
           <Controller
             name="name"
             control={control}
             render={({ field }) => (
-              <Input label="Location" placeholder="Location name" {...field} />
+              <Input label="Naziv" placeholder="Naziv lokacije" {...field} />
             )}
           />
           <Button type="button" onClick={handleSubmit(onSubmit)}>
@@ -45,7 +45,7 @@ const CreateLocationModal = ({ onComplete = () => {} }) => {
           </Button>
         </div>
       </Modal>
-      <Button onClick={toggleModal}>Create Location</Button>
+      <Button onClick={toggleModal}>Dodaj lokaciju</Button>
     </div>
   );
 };

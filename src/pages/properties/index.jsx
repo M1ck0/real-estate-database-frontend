@@ -17,24 +17,28 @@ dayjs.extend(relativeTime);
 
 const header = [
   {
-    name: "Name",
+    name: "Ime",
     accessor: "*",
     render: (data) => <Link to={`/properties/${data?.id}`}>{data?.title}</Link>,
   },
-  { name: "Location", accessor: "locations", render: (data) => data?.name },
-  { name: "Type", accessor: "type" },
+  { name: "Lokacija", accessor: "locations", render: (data) => data?.name },
+  {
+    name: "Tip",
+    accessor: "type",
+    render: (data) => <Badge text={data || "/"} />,
+  },
   {
     name: "Status",
     accessor: "status",
     render: (data) => <Badge text={data?.toUpperCase()} />,
   },
   {
-    name: "Available",
+    name: "Dostupno",
     accessor: "available",
     render: (data) => <Badge text={data ? "Yes" : "No"} />,
   },
   {
-    name: "Available Date",
+    name: "Dostupno od",
     accessor: "available_date",
     render: (data) => {
       return data ? (
@@ -48,10 +52,11 @@ const header = [
     },
   },
 
-  { name: "Bathrooms", accessor: "bathrooms" },
-  { name: "Bedrooms", accessor: "bedrooms" },
+  { name: "Kupatila", accessor: "bathrooms" },
+  { name: "Sobe", accessor: "bedrooms" },
+  { name: "Sprat", accessor: "floor", render: (data) => data },
   {
-    name: "Price",
+    name: "Cijena",
     accessor: "price",
     render: (data) =>
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
@@ -59,7 +64,7 @@ const header = [
       ),
   },
   {
-    name: "Actions",
+    name: "Akcije",
     accessor: "*",
     render: (data) => (
       <Link to={`/properties/edit/${data?.id}`} className="text-blue-500">
@@ -80,14 +85,14 @@ const Properties = () => {
 
   return (
     <div>
-      <div className="mb-5 flex items-center justify-between">
-        <PageTitle>Properties</PageTitle>
+      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-0">
+        <PageTitle>Nekretnine</PageTitle>
         <Link to="/properties/new">
-          <Button>Create New Property</Button>
+          <Button>Kreiraj novu nekretninu</Button>
         </Link>
       </div>
       <div className="mb-5 w-[300px]">
-        <Input label="Search" placeholder="Search..." onChange={setSearchText} />
+        <Input label="Pretraga" placeholder="Text..." onChange={setSearchText} />
       </div>
       <Table
         key={filtered?.length}

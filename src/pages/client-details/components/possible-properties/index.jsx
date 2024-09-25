@@ -11,12 +11,12 @@ import { supabase } from "client";
 
 const header = [
   {
-    name: "Name",
+    name: "Ime",
     accessor: "*",
     render: (data) => <Link to={`/properties/${data?.id}`}>{data?.title}</Link>,
   },
   {
-    name: "Type",
+    name: "Tip",
     accessor: "type",
     render: (data) => <Badge text={data || "/"} />,
   },
@@ -26,11 +26,11 @@ const header = [
     render: (data) => <Badge text={data?.toUpperCase()} />,
   },
 
-  { name: "Floor", accessor: "floor", render: (data) => data ?? "/" },
-  { name: "Bedrooms", accessor: "bedrooms" },
-  { name: "Bathrooms", accessor: "bathrooms" },
+  { name: "Sprat", accessor: "floor", render: (data) => data ?? "/" },
+  { name: "Sobe", accessor: "bedrooms" },
+  { name: "Kupatila", accessor: "bathrooms" },
   {
-    name: "Price",
+    name: "Cijena",
     accessor: "price",
     render: (data) =>
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
@@ -38,7 +38,7 @@ const header = [
       ),
   },
 
-  { name: "Location", accessor: "location", render: (data) => data?.name || "/" },
+  { name: "Lokacija", accessor: "location", render: (data) => data?.name || "/" },
   // {
   //   name: "Available",
   //   accessor: "available",
@@ -47,14 +47,13 @@ const header = [
 ];
 
 const matches = {
-  price: true,
-  type: false,
+  cijena: true,
+  tip: false,
   status: true,
-  floor: false,
-  bedrooms: false,
-  bathrooms: false,
-  location: false,
-  type: false,
+  sprat: false,
+  sobe: false,
+  kupatila: false,
+  lokacija: false,
 };
 
 const PossibleProperties = ({ data }) => {
@@ -66,20 +65,20 @@ const PossibleProperties = ({ data }) => {
 
     query.eq("available", true);
 
-    if (matchBy?.price === true) {
+    if (matchBy?.cijena === true) {
       query.gte("price", data?.min_price);
       query.lte("price", data?.max_price);
     }
 
-    if (matchBy?.bedrooms === true) {
+    if (matchBy?.sobe === true) {
       query.gte("bedrooms", data?.bedrooms);
     }
 
-    if (matchBy?.bathrooms === true) {
+    if (matchBy?.kupatila === true) {
       query.gte("bathrooms", data?.bathrooms || 0);
     }
 
-    if (matchBy?.type === true) {
+    if (matchBy?.tip === true) {
       query.eq("type", data?.type);
     }
 
@@ -87,7 +86,7 @@ const PossibleProperties = ({ data }) => {
       query.eq("status", data?.status);
     }
 
-    if (matchBy?.location === true) {
+    if (matchBy?.lokacija === true) {
       query.eq("location", data?.location?.id);
     }
 
@@ -124,7 +123,7 @@ const PossibleProperties = ({ data }) => {
 
   return (
     <div>
-      <div className="flex gap-10">
+      <div className="flex flex-col gap-10 lg:flex-row">
         <div className="flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
           <div className="flex flex-1 flex-col p-8">
             <UserIcon className="mx-auto h-32 w-32 flex-shrink-0 rounded-full" />
@@ -132,8 +131,8 @@ const PossibleProperties = ({ data }) => {
               {data?.client?.name}
             </h3>
             <dl className="mt-1 flex flex-grow flex-col justify-between">
-              <dt className="sr-only">Title</dt>
-              <dd className="text-sm text-gray-500">Client</dd>
+              <dt className="sr-only">Naslov</dt>
+              <dd className="text-sm text-gray-500">Klijent</dd>
             </dl>
           </div>
           <div>
@@ -144,13 +143,13 @@ const PossibleProperties = ({ data }) => {
                   className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
                 >
                   <PhoneIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
-                  Call
+                  Pozovi
                 </a>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex w-[500px] flex-col justify-between">
+        <div className="flex w-[500px] max-w-full flex-col justify-between">
           {Object.entries(items).map(([key, value]) => (
             <div className="flex w-full items-center justify-between border-b py-2">
               <p className="capitalize">{key}</p>
@@ -160,9 +159,9 @@ const PossibleProperties = ({ data }) => {
         </div>
       </div>
       <h2 className="mb-4 mt-10 text-xl font-semibold">
-        Possible properties ({properties?.length})
+        Moguće nekretnine ({properties?.length})
       </h2>
-      <div className="mb-4 grid grid-cols-7 gap-5">
+      <div className="mb-4 grid grid-cols-3 gap-5 sm:grid-cols-4 lg:grid-cols-7">
         {Object.entries(matchBy)?.map(([key, value]) => (
           <Checkbox
             label={key}

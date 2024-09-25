@@ -14,7 +14,7 @@ const usePropertyById = (id) => {
       .eq("id", id)
       .single();
 
-    setData({ ...property, images: property?.property_images?.[0]?.links });
+    setData({ ...property, images: property?.property_images?.links });
   };
 
   useEffect(() => {

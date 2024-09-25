@@ -30,18 +30,18 @@ export const propertyStatus = [
     value: "rent",
   },
   {
-    name: "Sale",
+    name: "Prodaja",
     value: "sale",
   },
 ];
 
 export const propertyType = [
   {
-    name: "House",
+    name: "Kuća",
     value: "house",
   },
   {
-    name: "Apartment",
+    name: "Stan",
     value: "apartment",
   },
   // {
@@ -51,6 +51,6 @@ export const propertyType = [
 ];
 
 export const propertyAvailable = [
-  { name: "Yes", value: "true" },
-  { name: "No", value: "false" },
+  { name: "Da", value: "true" },
+  { name: "Ne", value: "false" },
 ];

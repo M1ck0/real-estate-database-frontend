@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
@@ -8,9 +8,10 @@ import EditPropertyStep1 from "./form/edit-property-step-1";
 import usePropertyById from "common/hooks/use-property-by-id";
 
 import { supabase } from "client";
-import dayjs from "dayjs";
 
 const EditProperty = () => {
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const { propertyId } = useParams();
@@ -44,17 +45,20 @@ const EditProperty = () => {
   }, [property]);
 
   const onSubmit = async (values) => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("properties")
       .update({
         title: values?.name || property?.name,
-        available: values?.available?.value === "true" ? true : false,
+        available:
+          values?.available?.value === "true" || values?.available === "true"
+            ? true
+            : false,
         available_date: values?.availableDate || property?.available_date,
         price: values?.price || property?.price,
         bedrooms: values?.bedrooms || property?.bedrooms,
         bathrooms: values?.bathrooms || property?.bathrooms,
         location: values?.location?.value || property?.location?.id,
-        available: values?.available?.value === "true",
         status: values?.status?.value || property?.status,
         floor: values?.floor || property?.floor,
         type: values?.type?.value || property?.type,
@@ -76,17 +80,32 @@ const EditProperty = () => {
 
       await supabase.from("property_amenities").upsert(amenities);
 
-      if (!values?.images) return;
+      if (!values?.images) {
+        if (!error) {
+          navigate("/properties");
+          return;
+        }
+      }
 
       const files = values?.images; // Access the file input
 
+      // Extract the file extension (e.g., .jpg, .png) from the original file name
+
       const uploads = Array.from(files).map(async (file) => {
+        const timestamp = new Date().getTime();
+
+        const fileExtension = file.name.split(".").pop();
+
+        // Create a new file name by appending the timestamp to the original file name (without extension)
+        const newFileName = `${file.name.split(".")[0]}_${timestamp}.${fileExtension}`;
+
         const { data, error } = await supabase.storage
           .from("images") // Specify your bucket name
-          .upload(`${file.name}+${dayjs().valueOf()}`, file); // Path in the bucket
+          .upload(newFileName, file); // Path in the bucket
 
         if (error) {
           console.error("Error uploading file:", error);
+          navigate("/properties");
           return null;
         }
         return data; // You can return the uploaded file metadata
@@ -94,25 +113,36 @@ const EditProperty = () => {
 
       const imageResults = await Promise.all(uploads);
 
-      await supabase
-        .from("property_images")
-        .insert([
-          { property: property?.id, links: imageResults?.map((item) => item?.fullPath) },
-        ]);
+      const newImages = imageResults?.map((item) => item?.fullPath);
 
-      if (!error) {
+      const { error: imagesError } = await supabase.from("property_images").upsert(
+        [
+          {
+            property: property?.id,
+            links: [...newImages, ...(property?.images || [])],
+          },
+        ],
+        { onConflict: "property" },
+      );
+
+      if (!imagesError) {
         navigate("/properties");
+        return;
       }
     }
   };
 
+  useEffect(() => {
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+
   return (
     <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mx-auto h-[calc(100vh-100px)] max-w-[800px] space-y-5"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[800px] space-y-5">
         <EditPropertyStep1
+          loading={loading}
           watch={watch}
           control={control}
           setValue={setValue}

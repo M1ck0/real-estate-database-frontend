@@ -305,7 +305,7 @@ const EditPropertyStep1 = ({ loading, setValue, getValues, control, watch }) => 
           )}
         />
         <div className="flex justify-end border-t pt-4">
-          <Button type="submit" loading={loading}>
+          <Button type="submit" disabled={disabled} loading={loading}>
             Sačuvaj
           </Button>
         </div>

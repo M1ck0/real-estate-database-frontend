@@ -53,7 +53,7 @@ const CreateProperty = () => {
     await supabase.from("property_amenities").insert(amenities);
 
     if (!values?.images) {
-      // navigate("/properties");
+      navigate("/properties");
       return;
     }
 
@@ -84,8 +84,6 @@ const CreateProperty = () => {
 
     const newImages = imageResults?.map((item) => item?.fullPath);
 
-    console.log(data);
-
     const { data: imagesData, error: imagesError } = await supabase
       .from("property_images")
       .upsert(
@@ -99,10 +97,8 @@ const CreateProperty = () => {
       )
       .select();
 
-    console.log(imagesError, imagesData);
-
     if (!imagesError) {
-      // navigate("/properties");
+      navigate("/properties");
       return;
     }
   };

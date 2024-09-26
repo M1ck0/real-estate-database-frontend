@@ -302,7 +302,7 @@ const CreatePropertyStep1 = ({ loading, control, watch, setValue }) => {
           )}
         />
         <div className="flex justify-end border-t pt-4">
-          <Button type="submit" loading={loading}>
+          <Button disabled={loading} type="submit" loading={loading}>
             Sačuvaj
           </Button>
         </div>

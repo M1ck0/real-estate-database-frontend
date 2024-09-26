@@ -67,7 +67,7 @@ const CreateProperty = () => {
       const fileExtension = file.name.split(".").pop();
 
       // Create a new file name by appending the timestamp to the original file name (without extension)
-      const newFileName = `${file.name.split(".")[0]}_${timestamp}.${fileExtension}`;
+      const newFileName = `${file.name.split(".")[0]}_${timestamp}_${data?.id}.${fileExtension}`;
 
       const { data, error } = await supabase.storage
         .from("images") // Specify your bucket name

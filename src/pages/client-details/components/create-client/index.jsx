@@ -88,9 +88,7 @@ const CreateClient = () => {
         .select()
         .single();
 
-      if (!error) {
-        navigate("/clients");
-      }
+      navigate("/clients");
     }
   };
 

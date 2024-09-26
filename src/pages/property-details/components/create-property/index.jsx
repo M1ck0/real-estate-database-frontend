@@ -42,6 +42,7 @@ const CreateProperty = () => {
           owner_contact: values?.ownerPhone,
         },
       ])
+      .select()
       .single();
 
     const amenities = values?.amenities?.map((item) => ({
@@ -49,9 +50,7 @@ const CreateProperty = () => {
       amenity: item,
     }));
 
-    const { error: amenitiesError } = await supabase
-      .from("property_amenities")
-      .insert(amenities);
+    await supabase.from("property_amenities").insert(amenities);
 
     if (!values?.images) {
       // navigate("/properties");
@@ -75,7 +74,6 @@ const CreateProperty = () => {
         .upload(newFileName, file); // Path in the bucket
 
       if (error) {
-        console.error("Error uploading file:", error);
         navigate("/properties");
         return null;
       }
@@ -86,18 +84,25 @@ const CreateProperty = () => {
 
     const newImages = imageResults?.map((item) => item?.fullPath);
 
-    const { error: imagesError } = await supabase.from("property_images").upsert(
-      [
-        {
-          property: data?.id,
-          links: [...newImages, ...(data?.images || [])],
-        },
-      ],
-      { onConflict: "property" },
-    );
+    console.log(data);
+
+    const { data: imagesData, error: imagesError } = await supabase
+      .from("property_images")
+      .upsert(
+        [
+          {
+            property: data?.id,
+            links: [...newImages, ...(data?.images || [])],
+          },
+        ],
+        { onConflict: "property" },
+      )
+      .select();
+
+    console.log(imagesError, imagesData);
 
     if (!imagesError) {
-      navigate("/properties");
+      // navigate("/properties");
       return;
     }
   };

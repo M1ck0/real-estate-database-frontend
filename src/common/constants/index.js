@@ -1,7 +1,6 @@
 export const AUTH_TOKEN = "auth_token";
 
-export const DOMAIN =
-  "http://supabasekong-vc80cw0s0sg0wsckscocok84.167.235.22.31.sslip.io";
+export const DOMAIN = "https://apibaza.cityproperties.me";
 
 export const IMAGE_PATH = `${DOMAIN}/storage/v1/object/public`;
 

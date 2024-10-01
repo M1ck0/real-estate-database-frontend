@@ -69,7 +69,7 @@ const CreateClient = () => {
       } else {
         const { error } = await supabase.from("client_preferences").insert([
           {
-            client: client?.id,
+            client: clientId,
             bathrooms: values?.bathrooms || 0,
             bedrooms: values?.bedrooms || 0,
             floor: values?.floor,

@@ -37,12 +37,10 @@ const CreateClient = () => {
 
   const onSubmit = async (values) => {
     if (clientId) {
-      const { data: client } = await supabase
+      await supabase
         .from("clients")
         .update({ name: values?.name, phone_number: values?.phone })
-        .eq("id", clientId)
-        .select()
-        .single();
+        .eq("id", clientId);
 
       const { error } = await supabase
         .from("client_preferences")
@@ -56,9 +54,7 @@ const CreateClient = () => {
           status: values?.status?.value?.toLowerCase() || "rent",
           type: values?.type?.value?.toLowerCase() || "house",
         })
-        .eq("client", clientId)
-        .select()
-        .single();
+        .eq("client", clientId);
 
       if (!error) {
         navigate("/clients");
@@ -88,7 +84,9 @@ const CreateClient = () => {
         .select()
         .single();
 
-      navigate("/clients");
+      if (!error) {
+        navigate("/clients");
+      }
     }
   };
 

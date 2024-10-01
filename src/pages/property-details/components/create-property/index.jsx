@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import imageCompression from "browser-image-compression";
 import { useRecoilValue } from "recoil";
 
 import CreatePropertyStep1 from "./form/create-property-step-1";
@@ -21,7 +22,7 @@ const CreateProperty = () => {
 
   const onSubmit = async (values) => {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data: property, error } = await supabase
       .from("properties")
       .insert([
         {
@@ -46,7 +47,7 @@ const CreateProperty = () => {
       .single();
 
     const amenities = values?.amenities?.map((item) => ({
-      property: data?.id,
+      property: property?.id,
       amenity: item,
     }));
 
@@ -59,43 +60,58 @@ const CreateProperty = () => {
 
     const files = values?.images; // Access the file input
 
-    // Extract the file extension (e.g., .jpg, .png) from the original file name
+    // Image compression options
+    const options = {
+      maxSizeMB: 1, // Maximum file size (in MB)
+      maxWidthOrHeight: 1920, // Max width or height (px)
+      useWebWorker: true, // Use web worker for async compression
+    };
 
+    // Compress and upload images
     const uploads = Array.from(files).map(async (file) => {
-      const timestamp = new Date().getTime();
+      try {
+        const compressedFile = await imageCompression(file, options); // Compress the image
 
-      const fileExtension = file.name.split(".").pop();
+        const timestamp = new Date().getTime();
+        const fileExtension = file.name.split(".").pop();
 
-      // Create a new file name by appending the timestamp to the original file name (without extension)
-      const newFileName = `${file.name.split(".")[0]}_${timestamp}_${data?.id}.${fileExtension}`;
+        // Create a new file name by appending timestamp
+        const newFileName = `${file.name.split(".")[0]}_${timestamp}_${property?.id}.${fileExtension}`;
 
-      const { data, error } = await supabase.storage
-        .from("images") // Specify your bucket name
-        .upload(newFileName, file); // Path in the bucket
+        // Upload the compressed image to Supabase
+        const { data, error } = await supabase.storage
+          .from("images") // Specify your bucket name
+          .upload(newFileName, compressedFile); // Path in the bucket
 
-      if (error) {
-        navigate("/properties");
+        if (error) {
+          console.error("Upload error:", error.message);
+          navigate("/properties");
+          return null;
+        }
+
+        return data; // Return the uploaded file metadata
+      } catch (error) {
+        console.error("Compression error:", error.message);
         return null;
       }
-      return data; // You can return the uploaded file metadata
     });
 
     const imageResults = await Promise.all(uploads);
 
-    const newImages = imageResults?.map((item) => item?.fullPath);
+    const newImages = imageResults?.map((item) => item?.path); // Adjusted to use 'path'
 
+    // Upsert the new images into the 'property_images' table
     const { data: imagesData, error: imagesError } = await supabase
       .from("property_images")
       .upsert(
         [
           {
-            property: data?.id,
-            links: [...newImages, ...(data?.images || [])],
+            property: property?.id,
+            links: [...newImages, ...(property?.images || [])],
           },
         ],
         { onConflict: "property" },
-      )
-      .select();
+      );
 
     if (!imagesError) {
       navigate("/properties");

@@ -42,34 +42,32 @@ const CreateClient = () => {
         .update({ name: values?.name, phone_number: values?.phone })
         .eq("id", clientId);
 
-      const { error } = await supabase.from("client_preferences").upsert(
-        {
-          client: clientId,
-          bathrooms: values?.bathrooms || 0,
-          bedrooms: values?.bedrooms || 0,
-          floor: values?.floor,
-          location: values?.location?.value,
-          min_price: values?.minPrice,
-          max_price: values?.maxPrice,
-          status: values?.status?.value?.toLowerCase() || "rent",
-          type: values?.type?.value?.toLowerCase() || "house",
-        },
-        { onConflict: "client" },
-      );
-
-      if (!error) {
-        navigate("/clients");
-      }
-    } else {
-      const { data: client } = await supabase
-        .from("clients")
-        .insert([{ name: values?.name, phone_number: values?.phone }])
-        .select()
+      const { data: preferences } = await supabase
+        .from("client_preferences")
+        .select("id")
+        .eq("client", clientId)
         .single();
 
-      const { error } = await supabase
-        .from("client_preferences")
-        .insert([
+      if (preferences) {
+        const { error } = await supabase
+          .from("client_preferences")
+          .update({
+            bathrooms: values?.bathrooms || 0,
+            bedrooms: values?.bedrooms || 0,
+            floor: values?.floor,
+            location: values?.location?.value,
+            min_price: values?.minPrice,
+            max_price: values?.maxPrice,
+            status: values?.status?.value?.toLowerCase() || "rent",
+            type: values?.type?.value?.toLowerCase() || "house",
+          })
+          .eq("client", clientId);
+
+        if (!error) {
+          navigate("/clients");
+        }
+      } else {
+        const { error } = await supabase.from("client_preferences").insert([
           {
             client: client?.id,
             bathrooms: values?.bathrooms || 0,
@@ -81,9 +79,32 @@ const CreateClient = () => {
             status: values?.status?.value?.toLowerCase() || "rent",
             type: values?.type?.value?.toLowerCase() || "house",
           },
-        ])
+        ]);
+
+        if (!error) {
+          navigate("/clients");
+        }
+      }
+    } else {
+      const { data: client } = await supabase
+        .from("clients")
+        .insert([{ name: values?.name, phone_number: values?.phone }])
         .select()
         .single();
+
+      const { error } = await supabase.from("client_preferences").insert([
+        {
+          client: client?.id,
+          bathrooms: values?.bathrooms || 0,
+          bedrooms: values?.bedrooms || 0,
+          floor: values?.floor,
+          location: values?.location?.value,
+          min_price: values?.minPrice,
+          max_price: values?.maxPrice,
+          status: values?.status?.value?.toLowerCase() || "rent",
+          type: values?.type?.value?.toLowerCase() || "house",
+        },
+      ]);
 
       if (!error) {
         navigate("/clients");

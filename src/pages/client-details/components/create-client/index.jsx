@@ -42,9 +42,9 @@ const CreateClient = () => {
         .update({ name: values?.name, phone_number: values?.phone })
         .eq("id", clientId);
 
-      const { error } = await supabase
-        .from("client_preferences")
-        .update({
+      const { error } = await supabase.from("client_preferences").upsert(
+        {
+          client: clientId,
           bathrooms: values?.bathrooms || 0,
           bedrooms: values?.bedrooms || 0,
           floor: values?.floor,
@@ -53,8 +53,9 @@ const CreateClient = () => {
           max_price: values?.maxPrice,
           status: values?.status?.value?.toLowerCase() || "rent",
           type: values?.type?.value?.toLowerCase() || "house",
-        })
-        .eq("client", clientId);
+        },
+        { onConflict: "client" },
+      );
 
       if (!error) {
         navigate("/clients");

@@ -52,7 +52,7 @@ const EditProperty = () => {
   }, [property]);
 
   const onSubmit = async (values) => {
-    // setLoading(true);
+    setLoading(true);
     if (propertyId) {
       const { data, error } = await supabase
         .from("properties")

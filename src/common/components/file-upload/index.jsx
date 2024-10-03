@@ -1,6 +1,11 @@
 import { useRef, useState } from "react";
 
-const FileUpload = ({ onChange }) => {
+const FileUpload = ({
+  mutliple = true,
+  label = "Upload",
+  description = "Click to upload",
+  onChange,
+}) => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
   const fileInputRef = useRef();
@@ -28,13 +33,13 @@ const FileUpload = ({ onChange }) => {
         onClick={() => fileInputRef.current.click()}
         className="w-full cursor-pointer space-y-1 rounded-xl border border-dashed border-gray-300 px-5 py-4"
       >
-        <p className="font-semibold">Upload</p>
-        <p className="text-sm text-gray-600">Click to upload images</p>
+        <p className="font-semibold">{label}</p>
+        <p className="text-sm text-gray-600">{description}</p>
       </div>
       <input
         ref={fileInputRef}
         type="file"
-        multiple
+        multiple={mutliple}
         className="hidden"
         onChange={onInputChange}
       />

@@ -8,6 +8,7 @@ import Table from "common/components/table";
 import Checkbox from "common/components/checkbox";
 
 import { supabase } from "client";
+import { building } from "common/constants";
 
 const header = [
   {
@@ -54,6 +55,7 @@ const matches = {
   sobe: false,
   kupatila: false,
   lokacija: false,
+  gradnja: false,
 };
 
 const PossibleProperties = ({ data }) => {
@@ -84,6 +86,10 @@ const PossibleProperties = ({ data }) => {
 
     if (matchBy?.status === true) {
       query.eq("status", data?.status);
+    }
+
+    if (matchBy?.gradnja === true) {
+      query.eq("building", data?.building);
     }
 
     if (matchBy?.lokacija === true) {
@@ -119,6 +125,7 @@ const PossibleProperties = ({ data }) => {
     status: data?.status || "/",
     bedrooms: data?.bedrooms ?? "/",
     bathrooms: data?.bathrooms ?? "/",
+    gradnja: building?.find((item) => item?.value === data?.building)?.name,
   };
 
   return (

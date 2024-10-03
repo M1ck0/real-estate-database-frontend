@@ -10,6 +10,8 @@ import Button from "common/components/button";
 import PageTitle from "common/components/page-title";
 
 import useClients from "common/hooks/use-clients";
+import Switch from "common/components/switch";
+import { supabase } from "client";
 
 const header = [
   {
@@ -64,6 +66,12 @@ const header = [
       ) ?? "/",
   },
   {
+    name: "Aktivan",
+    accessor: "*",
+    render: (data) => <Active data={data} />,
+  },
+
+  {
     name: "Akcije",
     accessor: "*",
     render: (data) => (
@@ -74,14 +82,37 @@ const header = [
   },
 ];
 
-const Clients = () => {
+const Active = ({ data }) => {
+  const onSwitch = async () => {
+    const { data: d, error } = await supabase
+      .from("client_preferences")
+      .update({ active: !data?.client_preferences?.active })
+      .eq("client", data?.id);
+  };
+
+  return (
+    <div>
+      <Switch value={data?.client_preferences?.active} onChange={onSwitch} />
+    </div>
+  );
+};
+
+const Clients = ({ rent, sale }) => {
   const [searchText, setSearchText] = useState("");
 
   const { data: clients } = useClients();
 
-  const filtered = clients?.filter((item) =>
-    JSON.stringify(item)?.toLowerCase()?.includes(searchText?.toLowerCase()),
-  );
+  const filtered = clients
+    ?.filter((item) =>
+      JSON.stringify(item)?.toLowerCase()?.includes(searchText?.toLowerCase()),
+    )
+    ?.filter((item) =>
+      sale
+        ? item?.client_preferences?.status === "sale"
+        : rent
+          ? item?.client_preferences?.status === "rent"
+          : item,
+    );
 
   return (
     <div>

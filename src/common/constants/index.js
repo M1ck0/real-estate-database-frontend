@@ -3,6 +3,7 @@ export const AUTH_TOKEN = "auth_token";
 export const DOMAIN = "https://apibaza.cityproperties.me";
 
 export const IMAGE_PATH = `${DOMAIN}/storage/v1/object/public`;
+export const FILE_PATH = `${DOMAIN}/storage/v1/object/public`;
 
 export const propertyBedrooms = [
   { name: "0", value: "0" },
@@ -43,10 +44,16 @@ export const propertyType = [
     name: "Stan",
     value: "apartment",
   },
-  // {
-  //   name: "Land",
-  //   value: "land",
-  // },
+  {
+    name: "Poslovni prostor",
+    value: "office",
+  },
+];
+
+export const building = [
+  { name: "Novogradnja", value: "new" },
+  { name: "Starogradnja", value: "old" },
+  { name: "U izgradnji", value: "in-progress" },
 ];
 
 export const propertyAvailable = [

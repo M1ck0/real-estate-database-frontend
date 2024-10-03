@@ -18,7 +18,7 @@ const CreateProperty = () => {
 
   const navigate = useNavigate();
 
-  const { control, watch, handleSubmit, setValue } = useForm();
+  const { control, watch, handleSubmit, setValue, getValues } = useForm();
 
   const onSubmit = async (values) => {
     setLoading(true);
@@ -30,13 +30,13 @@ const CreateProperty = () => {
           available: values?.available?.value === "true" ? true : false,
           price: values?.price,
           size: values?.size,
-          bedrooms: values?.bedrooms,
-          bathrooms: values?.bathrooms,
+          bedrooms: values?.bedrooms || 0,
+          bathrooms: values?.bathrooms || 0,
           location: values?.location?.value,
           agent: user?.id,
           available_date: values?.availableDate,
           status: values?.status?.value,
-          floor: values?.floor,
+          floor: values?.floor || 0,
           type: values?.type?.value,
           description: values?.description,
           owner: values?.ownerName,
@@ -54,7 +54,7 @@ const CreateProperty = () => {
     await supabase.from("property_amenities").insert(amenities);
 
     if (!values?.images) {
-      navigate("/properties");
+      // navigate("/properties");
       return;
     }
 
@@ -113,10 +113,47 @@ const CreateProperty = () => {
         { onConflict: "property" },
       );
 
-    if (!imagesError) {
-      navigate("/properties");
-      return;
-    }
+    const contract = values?.contract; // Access the file input
+
+    // Compress and upload images
+    const contractUpload = Array.from(contract).map(async (file) => {
+      try {
+        const timestamp = new Date().getTime();
+        const fileExtension = file.name.split(".").pop();
+
+        // Create a new file name by appending timestamp
+        const newFileName = `${file.name.split(".")[0]}_${timestamp}_${property?.id}.${fileExtension}`;
+
+        // Upload the compressed image to Supabase
+        const { data, error } = await supabase.storage
+          .from("files") // Specify your bucket name
+          .upload(newFileName, file); // Path in the bucket
+
+        if (error) {
+          console.error("Upload error:", error.message);
+          // navigate("/properties");
+          return null;
+        }
+
+        return data; // Return the uploaded file metadata
+      } catch (error) {
+        console.error("Compression error:", error.message);
+        return null;
+      }
+    });
+
+    const contractResults = await Promise.all(contractUpload);
+
+    await supabase
+      .from("properties")
+      .update({
+        contract: contractResults[0],
+      })
+      .eq("id", property?.id)
+      .select()
+      .single();
+
+    navigate("/properties");
   };
 
   useEffect(() => {
@@ -137,6 +174,7 @@ const CreateProperty = () => {
           watch={watch}
           control={control}
           setValue={setValue}
+          getValues={getValues}
         />
       </form>
     </div>

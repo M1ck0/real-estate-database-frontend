@@ -8,6 +8,7 @@ import RadioGroup from "common/components/radio";
 import useLocations from "common/hooks/use-locations";
 
 import {
+  building,
   propertyBathrooms,
   propertyBedrooms,
   propertyStatus,
@@ -128,6 +129,22 @@ const CreateClientStep1 = ({ clientId, control }) => {
             </div>
           )}
         />
+        <Controller
+          name="building"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
+              <div>
+                <p className="font-semibold">Gradnja</p>
+                <p className="text-sm text-gray-600">Izaberi gradnju</p>
+              </div>
+              <div className="lg:w-[400px]">
+                <Select placeholder="Select" data={building} {...field} />
+              </div>
+            </div>
+          )}
+        />
+
         <Controller
           name="bedrooms"
           control={control}

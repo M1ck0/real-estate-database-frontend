@@ -14,7 +14,11 @@ const usePropertyById = (id) => {
       .eq("id", id)
       .single();
 
-    setData({ ...property, images: property?.property_images?.links });
+    setData({
+      ...property,
+      images: property?.property_images?.links,
+      contract: JSON.parse(property?.contract || "{}")?.fullPath,
+    });
   };
 
   useEffect(() => {

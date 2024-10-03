@@ -17,7 +17,7 @@ import useLocations from "common/hooks/use-locations";
 
 import { propertyAvailable, propertyType, propertyStatus } from "common/constants";
 
-const CreatePropertyStep1 = ({ loading, control, watch, setValue }) => {
+const CreatePropertyStep1 = ({ loading, control, watch, setValue, getValues }) => {
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   const { data: locations, getData: getLocations } = useLocations();
@@ -49,11 +49,24 @@ const CreatePropertyStep1 = ({ loading, control, watch, setValue }) => {
       <div className="divide-y lg:w-full">
         <div className="py-8">
           <FileUpload
+            label="Dodaj slike"
+            description="Klikni da dodas slike"
             onChange={(e) => {
               setValue("images", e.target.files); // Set the file input value
             }}
           />
         </div>
+        <div className="py-8">
+          <FileUpload
+            mutliple={false}
+            label="Dodaj ugovor"
+            description="Klikni da dodas ugovor"
+            onChange={(e) => {
+              setValue("contract", e.target.files); // Set the file input value
+            }}
+          />
+        </div>
+
         <Controller
           name="type"
           control={control}

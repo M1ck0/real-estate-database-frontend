@@ -2,7 +2,7 @@ import { UserIcon } from "@heroicons/react/20/solid";
 import useEmblaCarousel from "embla-carousel-react";
 
 import Button from "common/components/button";
-import { IMAGE_PATH } from "common/constants";
+import { FILE_PATH, IMAGE_PATH, building } from "common/constants";
 
 const PropertyDetailsUi = ({ data }) => {
   const [emblaRef] = useEmblaCarousel();
@@ -14,6 +14,7 @@ const PropertyDetailsUi = ({ data }) => {
     tip: data?.type,
     status: data?.status,
     lokacija: data?.location?.name,
+    gradnja: building?.find((item) => item?.value === data?.building)?.name,
   };
 
   const amenities = data?.property_amenities;
@@ -69,7 +70,7 @@ const PropertyDetailsUi = ({ data }) => {
           ) : null}
         </div>
         <div className="col-span-3 lg:col-span-1">
-          <div className="sticky top-5 rounded-xl border p-5">
+          <div className="rounded-xl border p-5">
             <div className="mb-5 border-b pb-5">
               <p className="text-xs font-bold uppercase text-gray-500">Cijena</p>
               <p className="mt-3 text-3xl font-semibold text-blue-600">
@@ -94,6 +95,14 @@ const PropertyDetailsUi = ({ data }) => {
               </a>
             </div>
           </div>
+          {data?.contract ? (
+            <div className="mt-5 rounded-xl border p-5">
+              <p className="mb-3 text-xs font-bold uppercase text-gray-500">Ugovor</p>
+              <a href={`${FILE_PATH}/${data?.contract}`} download target="_blank">
+                {data?.contract?.replace("files/", "")}
+              </a>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

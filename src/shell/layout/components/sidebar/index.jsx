@@ -8,13 +8,38 @@ const Sidebar = ({ routes, children }) => {
       <aside className="sticky top-2 flex h-[100px] w-full justify-between bg-zinc-100 px-3 py-4 lg:h-auto lg:w-[200px] lg:flex-col lg:justify-start lg:gap-2">
         {routes?.map((route) => {
           return (
-            <Link
-              to={route?.link || route?.path}
-              className="flex flex-col items-center gap-3 rounded-lg px-3 py-3 duration-300 hover:bg-white hover:shadow lg:flex-row"
-            >
-              <route.icon className="w-6 flex-shrink-0 text-black/70" />
-              <p className="text-base font-semibold text-black">{route?.name}</p>
-            </Link>
+            <>
+              {route?.subroutes ? (
+                <div className="mb-2 border-b pb-2">
+                  <Link
+                    to={route?.link || route?.path}
+                    className="flex flex-col items-center gap-3 rounded-lg px-3 py-3 duration-300 hover:bg-white hover:shadow lg:flex-row"
+                  >
+                    <p className="text-base font-semibold text-black">{route?.name}</p>
+                  </Link>
+                  {route?.routes?.map((subRoute) =>
+                    subRoute?.sidebar ? (
+                      <Link
+                        to={subRoute?.link || subRoute?.path}
+                        className="flex flex-col items-center gap-3 rounded-lg px-3 py-3 pl-8 duration-300 hover:bg-white hover:shadow lg:flex-row"
+                      >
+                        <p className="text-base font-semibold text-black">
+                          {subRoute?.name}
+                        </p>
+                      </Link>
+                    ) : null,
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to={route?.link || route?.path}
+                  className="flex flex-col items-center gap-3 rounded-lg px-3 py-3 duration-300 hover:bg-white hover:shadow lg:flex-row"
+                >
+                  {/* <route.icon className="w-6 flex-shrink-0 text-black/70" /> */}
+                  <p className="text-base font-semibold text-black">{route?.name}</p>
+                </Link>
+              )}
+            </>
           );
         })}
         {/* <img src="/assets/icons/logo.svg" className="mb-3 mt-auto w-[80%] pb-3" /> */}

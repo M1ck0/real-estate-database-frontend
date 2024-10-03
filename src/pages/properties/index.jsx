@@ -64,6 +64,12 @@ const header = [
       ),
   },
   {
+    name: "Dodato",
+    accessor: "created_at",
+    render: (data) => dayjs(data).format("DD MMM YYYY"),
+  },
+
+  {
     name: "Akcije",
     accessor: "*",
     render: (data) => (
@@ -74,14 +80,18 @@ const header = [
   },
 ];
 
-const Properties = () => {
+const Properties = ({ rent, sale }) => {
   const [searchText, setSearchText] = useState("");
 
   const { data: properties } = useProperties();
 
-  const filtered = properties?.filter((item) =>
-    JSON.stringify(item)?.toLowerCase()?.includes(searchText?.toLowerCase()),
-  );
+  const filtered = properties
+    ?.filter((item) =>
+      JSON.stringify(item)?.toLowerCase()?.includes(searchText?.toLowerCase()),
+    )
+    ?.filter((item) =>
+      sale ? item?.status === "sale" : rent ? item?.status === "rent" : item,
+    );
 
   return (
     <div>

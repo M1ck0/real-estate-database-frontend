@@ -18,6 +18,7 @@ const router = [
     link: "/properties",
     component: () => <Properties />,
     icon: (props) => <HomeIcon {...props} />,
+    subroutes: true,
     routes: [
       {
         name: "Property Details",
@@ -27,12 +28,26 @@ const router = [
       {
         name: "New Property",
         path: "/properties/new",
-        component: () => <CreateProperty />,
+        component: () => <EditProperty />,
       },
       {
         name: "New Property",
         path: "/properties/edit/:propertyId",
         component: () => <EditProperty />,
+      },
+      {
+        name: "Prodaja",
+        path: "/properties/sale/*",
+        link: "/properties/sale",
+        component: () => <Properties sale />,
+        sidebar: true,
+      },
+      {
+        name: "Izdavanje",
+        path: "/properties/rent/*",
+        link: "/properties/rent",
+        component: () => <Properties rent />,
+        sidebar: true,
       },
     ],
   },
@@ -42,6 +57,7 @@ const router = [
     link: "/clients",
     component: () => <Clients />,
     icon: (props) => <UsersIcon {...props} />,
+    subroutes: true,
     routes: [
       {
         name: "Client Details",
@@ -57,6 +73,20 @@ const router = [
         name: "Edit Client",
         path: "/clients/edit/:clientId",
         component: () => <CreateClient />,
+      },
+      {
+        name: "Prodaja",
+        path: "/clients/sale/*",
+        link: "/clients/sale",
+        component: () => <Clients sale />,
+        sidebar: true,
+      },
+      {
+        name: "Izdavanje",
+        path: "/clients/rent/*",
+        link: "/clients/rent",
+        component: () => <Clients rent />,
+        sidebar: true,
       },
     ],
   },

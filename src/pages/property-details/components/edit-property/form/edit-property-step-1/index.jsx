@@ -15,7 +15,12 @@ import CreateLocationModal from "common/modals/create-location-modal";
 import useAmenities from "common/hooks/use-amenities";
 import useLocations from "common/hooks/use-locations";
 
-import { propertyAvailable, propertyType, propertyStatus } from "common/constants";
+import {
+  propertyAvailable,
+  propertyType,
+  propertyStatus,
+  building,
+} from "common/constants";
 
 const EditPropertyStep1 = ({ loading, setValue, getValues, control, watch }) => {
   const [selectedAmenities, setSelectedAmenities] = useState([]);
@@ -52,11 +57,24 @@ const EditPropertyStep1 = ({ loading, setValue, getValues, control, watch }) => 
       <div className="divide-y lg:w-full">
         <div className="py-8">
           <FileUpload
+            label="Dodaj slike"
+            description="Klikni da dodas slike"
             onChange={(e) => {
               setValue("images", e.target.files); // Set the file input value
             }}
           />
         </div>
+        <div className="py-8">
+          <FileUpload
+            mutliple={false}
+            label="Dodaj ugovor"
+            description="Klikni da dodas ugovor"
+            onChange={(e) => {
+              setValue("contract", e.target.files); // Set the file input value
+            }}
+          />
+        </div>
+
         <Controller
           name="type"
           control={control}
@@ -87,6 +105,22 @@ const EditPropertyStep1 = ({ loading, setValue, getValues, control, watch }) => 
             </div>
           )}
         />
+        <Controller
+          name="building"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
+              <div>
+                <p className="font-semibold">Gradnja</p>
+                <p className="text-sm text-gray-600">Izaberi gradnju</p>
+              </div>
+              <div className="flex flex-col gap-3 lg:w-[400px]">
+                <Select placeholder="Select" data={building} {...field} />
+              </div>
+            </div>
+          )}
+        />
+
         <Controller
           name="name"
           control={control}
@@ -241,23 +275,23 @@ const EditPropertyStep1 = ({ loading, setValue, getValues, control, watch }) => 
             </div>
           )}
         />
-        <div className="py-4">
-          <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0">
-            <div>
-              <p className="font-semibold">Pogodnosti</p>
-              <p className="text-sm text-gray-600">Izaberi dostupne pogodnosti</p>
-            </div>
-            <div className="flex flex-wrap gap-4 lg:w-[500px]">
-              {amenities?.map((item) => (
-                <Checkbox
-                  label={item?.name}
-                  value={getValues("amenities")?.includes(item?.id)}
-                  onChange={(value) => onCheckboxChange(item, value)}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* <div className="py-4"> */}
+        {/*   <div className="flex flex-col gap-2 py-8 lg:flex-row lg:items-center lg:justify-between lg:gap-0"> */}
+        {/*     <div> */}
+        {/*       <p className="font-semibold">Pogodnosti</p> */}
+        {/*       <p className="text-sm text-gray-600">Izaberi dostupne pogodnosti</p> */}
+        {/*     </div> */}
+        {/*     <div className="flex flex-wrap gap-4 lg:w-[500px]"> */}
+        {/*       {amenities?.map((item) => ( */}
+        {/*         <Checkbox */}
+        {/*           label={item?.name} */}
+        {/*           value={getValues("amenities")?.includes(item?.id)} */}
+        {/*           onChange={(value) => onCheckboxChange(item, value)} */}
+        {/*         /> */}
+        {/*       ))} */}
+        {/*     </div> */}
+        {/*   </div> */}
+        {/* </div> */}
 
         <Controller
           name="description"

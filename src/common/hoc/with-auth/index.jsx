@@ -10,8 +10,6 @@ const WithAuth = ({ children }) => {
   const getUser = async () => {
     const { data } = await supabase.auth.getSession();
 
-    console.log(data);
-
     if (data?.session) {
       setAuth(true);
     } else {
@@ -23,8 +21,6 @@ const WithAuth = ({ children }) => {
   useEffect(() => {
     getUser();
   }, []);
-
-  console.log("auth: ", auth);
 
   return <Outlet />;
 };

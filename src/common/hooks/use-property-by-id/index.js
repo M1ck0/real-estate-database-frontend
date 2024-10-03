@@ -16,7 +16,10 @@ const usePropertyById = (id) => {
 
     setData({
       ...property,
-      images: property?.property_images?.links,
+      images: property?.property_images?.links?.map((item) =>
+        item?.startsWith("images/") ? item : `images/${item}`,
+      ),
+
       contract: JSON.parse(property?.contract || "{}")?.fullPath,
     });
   };

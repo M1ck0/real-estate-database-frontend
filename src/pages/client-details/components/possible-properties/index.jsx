@@ -73,11 +73,11 @@ const PossibleProperties = ({ data }) => {
     }
 
     if (matchBy?.sobe === true) {
-      query.gte("bedrooms", data?.bedrooms);
+      query.eq("bedrooms", data?.bedrooms);
     }
 
     if (matchBy?.kupatila === true) {
-      query.gte("bathrooms", data?.bathrooms || 0);
+      query.eq("bathrooms", data?.bathrooms || 0);
     }
 
     if (matchBy?.tip === true) {

@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router";
 
 import CreateClientStep1 from "./form/create-client-step-1";
 
 import useClientById from "common/hooks/use-client-by-id";
 
+import { userState } from "state/atom/user";
+
 import { supabase } from "client";
 
 const CreateClient = () => {
+  const user = useRecoilValue(userState);
+
   const navigate = useNavigate();
 
   const { clientId } = useParams();
@@ -58,6 +63,7 @@ const CreateClient = () => {
             floor: values?.floor,
             building: values?.building?.value,
             location: values?.location?.value,
+            agent: user?.id,
             min_price: values?.minPrice,
             max_price: values?.maxPrice,
             status: values?.status?.value?.toLowerCase() || "rent",

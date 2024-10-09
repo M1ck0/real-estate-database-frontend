@@ -63,6 +63,7 @@ const header = [
         data || 0,
       ),
   },
+  { name: "Agent", accessor: "agent", render: (data) => data?.name },
   {
     name: "Dodato",
     accessor: "created_at",

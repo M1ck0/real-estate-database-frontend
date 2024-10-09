@@ -84,7 +84,6 @@ const PossibleClients = ({ data }) => {
     const query = supabase.from("client_preferences").select("*, client(*), location(*)");
 
     if (matchBy?.cijena === true) {
-      query.lte("min_price", data?.price); // Clients with min_price <= propertyPrice
       query.gte("max_price", data?.price);
     }
 
@@ -101,11 +100,11 @@ const PossibleClients = ({ data }) => {
     }
 
     if (matchBy?.sobe === true) {
-      query.lte("bedrooms", 100);
+      query.eq("bedrooms", data?.bedrooms);
     }
 
     if (matchBy?.kupatila === true) {
-      query.lte("bathrooms", 100);
+      query.eq("bathrooms", data?.bedrooms);
     }
 
     if (matchBy?.sprat === true) {

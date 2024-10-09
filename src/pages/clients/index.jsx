@@ -7,10 +7,11 @@ import Input from "common/components/input";
 import Badge from "common/components/badge";
 import Table from "common/components/table";
 import Button from "common/components/button";
+import Switch from "common/components/switch";
 import PageTitle from "common/components/page-title";
 
 import useClients from "common/hooks/use-clients";
-import Switch from "common/components/switch";
+
 import { supabase } from "client";
 
 const header = [
@@ -64,6 +65,11 @@ const header = [
       new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(
         data?.max_price || 0,
       ) ?? "/",
+  },
+  {
+    name: "Agent",
+    accessor: "agent",
+    render: (data) => data?.name || "/",
   },
   {
     name: "Aktivan",

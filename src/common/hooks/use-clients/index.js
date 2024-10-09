@@ -9,7 +9,7 @@ const useClients = () => {
     try {
       const { data: clients, error } = await supabase
         .from("clients")
-        .select("*, client_preferences(*, location(*))");
+        .select("*, client_preferences(*, location(*)), agent(*)");
 
       if (error) {
         console.error("Error fetching data:", error);

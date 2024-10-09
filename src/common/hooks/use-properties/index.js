@@ -7,7 +7,7 @@ const useProperties = () => {
 
   const getData = async (filters) => {
     try {
-      const query = supabase.from("properties").select("*, locations(id,name)");
+      const query = supabase.from("properties").select("*, locations(id,name), agent(*)");
 
       // Conditionally apply filters if they exist
       if (filters?.name || filters?.name === "") {
@@ -15,6 +15,7 @@ const useProperties = () => {
       }
 
       // Always apply the ordering
+      query.order("available", { ascending: false });
       query.order("created_at", { ascending: false });
 
       // Execute the query with abort signal

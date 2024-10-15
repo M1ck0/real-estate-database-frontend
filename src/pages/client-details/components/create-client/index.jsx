@@ -13,6 +13,8 @@ import { userState } from "state/atom/user";
 import { supabase } from "client";
 
 const CreateClient = () => {
+  const [loading, setLoading] = useState(false);
+
   const user = useRecoilValue(userState);
 
   const navigate = useNavigate();
@@ -42,10 +44,11 @@ const CreateClient = () => {
   }, [client]);
 
   const onSubmit = async (values) => {
+    setLoading(true);
     if (clientId) {
       await supabase
         .from("clients")
-        .update({ name: values?.name, phone_number: values?.phone })
+        .update({ name: values?.name, phone_number: values?.phone, agent: user?.id })
         .eq("id", clientId);
 
       const { data: preferences } = await supabase
@@ -63,7 +66,6 @@ const CreateClient = () => {
             floor: values?.floor,
             building: values?.building?.value,
             location: values?.location?.value,
-            agent: user?.id,
             min_price: values?.minPrice,
             max_price: values?.maxPrice,
             status: values?.status?.value?.toLowerCase() || "rent",
@@ -97,7 +99,7 @@ const CreateClient = () => {
     } else {
       const { data: client } = await supabase
         .from("clients")
-        .insert([{ name: values?.name, phone_number: values?.phone }])
+        .insert([{ name: values?.name, phone_number: values?.phone, agent: user?.id }])
         .select()
         .single();
 
@@ -122,10 +124,16 @@ const CreateClient = () => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[800px] space-y-5">
-        <CreateClientStep1 clientId={clientId} control={control} />
+        <CreateClientStep1 loading={loading} clientId={clientId} control={control} />
       </form>
     </div>
   );

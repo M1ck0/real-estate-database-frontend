@@ -17,7 +17,7 @@ import {
 
 import { sortByName } from "common/utils";
 
-const CreateClientStep1 = ({ clientId, control }) => {
+const CreateClientStep1 = ({ loading, clientId, control }) => {
   const { data: locations } = useLocations();
 
   return (
@@ -192,7 +192,7 @@ const CreateClientStep1 = ({ clientId, control }) => {
         />
 
         <div className="flex justify-end border-t pt-4">
-          <Button type="submit">
+          <Button type="submit" loading={loading}>
             {clientId ? "Izmijeni klijenta" : "Kreiraj klijenta"}
           </Button>
         </div>

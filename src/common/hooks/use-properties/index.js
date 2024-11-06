@@ -15,7 +15,7 @@ const useProperties = () => {
       }
 
       // Always apply the ordering
-      query.order("available", { ascending: false });
+      // query.order("available", { ascending: false });
       query.order("created_at", { ascending: false });
 
       // Execute the query with abort signal

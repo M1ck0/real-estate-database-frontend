@@ -1,6 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary: #0f766e;
+  --color-primary-hover: #0d6460;
+  --color-primary-light: #f0fdfa;
+  --color-primary-muted: #ccfbf1;
+  --color-sidebar-bg: #ffffff;
+  --color-sidebar-border: #e2e8f0;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -8,16 +22,38 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Inter, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f5f8fe;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 a {
   text-decoration: none;
-  color: #0479fa;
+  color: var(--color-primary);
+  transition: color 150ms ease;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .embla {

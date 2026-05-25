@@ -18,7 +18,14 @@ const header = [
   {
     name: "Ime",
     accessor: "*",
-    render: (data) => <Link to={`/clients/${data?.id}`}>{data?.name}</Link>,
+    render: (data) => (
+      <Link
+        to={`/clients/${data?.id}`}
+        className="font-medium text-teal-700 hover:underline"
+      >
+        {data?.name}
+      </Link>
+    ),
   },
   {
     name: "Broj telefona",
@@ -48,7 +55,13 @@ const header = [
   {
     name: "Lokacija",
     accessor: "client_preferences",
-    render: (data) => data?.location?.name || "/",
+    render: (data) =>
+      data?.client_preference_locations
+        ?.map((cpl) => cpl?.locations?.name)
+        .filter(Boolean)
+        .join(", ") ||
+      data?.location?.name ||
+      "—",
   },
   {
     name: "Minimalna cijena",
@@ -81,8 +94,11 @@ const header = [
     name: "Akcije",
     accessor: "*",
     render: (data) => (
-      <Link to={`/clients/edit/${data?.id}`} className="text-blue-500">
-        <PencilSquareIcon className="size-6" />
+      <Link
+        to={`/clients/edit/${data?.id}`}
+        className="inline-flex items-center justify-center rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+      >
+        <PencilSquareIcon className="size-4" />
       </Link>
     ),
   },
@@ -122,18 +138,14 @@ const Clients = ({ rent, sale }) => {
 
   return (
     <div>
-      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-0">
-        <PageTitle>Klijenti</PageTitle>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <PageTitle subtitle={`${filtered?.length ?? 0} klijenata`}>Klijenti</PageTitle>
         <Link to="/clients/new">
           <Button>Kreiraj novog klijenta</Button>
         </Link>
       </div>
-      <div className="mb-5 w-[300px]">
-        <Input
-          label="Pretraga"
-          placeholder="Tekst pretrage..."
-          onChange={setSearchText}
-        />
+      <div className="mb-5 max-w-xs">
+        <Input placeholder="Pretraga klijenata..." onChange={setSearchText} />
       </div>
 
       <Table

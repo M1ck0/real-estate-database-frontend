@@ -44,103 +44,106 @@ const Table = ({
     }
   }, [currentPage, perPage, totalElements]);
 
+  const totalPages = Math.ceil((totalElements || data.length) / perPage);
+
   return (
     <>
       <div
         className={classNames(
-          border ? "border border-[#E3E3E6]" : "",
-          "table-wrapper max-w-full overflow-x-auto rounded-lg bg-white",
+          border ? "border border-slate-200" : "",
+          "max-w-full overflow-x-auto rounded-xl bg-white shadow-sm",
         )}
       >
-        <div className="table w-full">
-          <div className="table-parent w-full">
-            <table className="w-full overflow-x-auto px-5">
-              <thead className={classNames(search ? "border-t-[1px]" : "")}>
-                <tr className="border-b-[1px] pb-10">
-                  {tableHeader?.map((item) => (
-                    <th
-                      key={item?.name}
-                      scope="col"
-                      className={classNames(
-                        item?.sticky ? "sticky right-0 bg-white" : "", // Add "sticky right-0" class conditionally
-                        "whitespace-nowrap border-b-[1px] border-b-gray-100 bg-[#4146560A] px-5 py-1.5 text-[13px] font-medium text-gray-700",
-                      )}
-                    >
-                      <div className="flex gap-3 text-left">
-                        <span className="whitespace-nowrap text-[13px] font-medium capitalize text-gray-500 opacity-80">
-                          {item?.name}
-                        </span>
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
+        <table className="w-full min-w-full">
+          <thead>
+            <tr className="border-b border-slate-100 bg-slate-50">
+              {tableHeader?.map((item) => (
+                <th
+                  key={item?.name}
+                  scope="col"
+                  className={classNames(
+                    item?.sticky ? "sticky right-0 bg-slate-50" : "",
+                    "whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500",
+                  )}
+                >
+                  {item?.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-              <tbody className="gap-4 divide-y divide-gray-100" key={currentPage}>
-                {sliced?.map((item, idx) => {
-                  return (
-                    <tr key={idx} className="even:bg-[#41465608]">
-                      {tableHeader?.map((col, i) => {
-                        return col?.show === false ? null : (
-                          <td
-                            key={i}
-                            className={classNames(
-                              col?.sticky ? "sticky right-0 bg-white text-center" : "",
-                              "relative whitespace-nowrap px-5 py-[10.5px] text-[13px] font-medium text-gray-700",
-                            )}
-                            style={{ zIndex: col?.sticky ? perPage * 2 - idx : "" }}
-                          >
-                            {col?.sticky ? (
-                              <div className="absolute left-0 top-0 h-[58px] w-[1px] bg-[#eee]" />
-                            ) : null}
-                            {item
-                              ? typeof col?.render === "function"
-                                ? col?.accessor !== "*"
-                                  ? col?.render(item[col?.accessor])
-                                  : col?.render(item)
-                                : item[col?.accessor]
-                              : null}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      {(data?.length > perPage || totalElements > perPage) && loading === false ? (
-        <div className="sticky left-0 mt-5 flex w-full items-center justify-end gap-7 text-right">
-          <div className="mr-auto flex gap-3"></div>
-          {data?.length > perPage || totalElements > perPage ? (
-            <div className="flex gap-3">
-              <Button onClick={onPreviousPage} disabled={currentPage <= 1}>
-                <div className="5 flex gap-1">
-                  {currentPage <= 1 ? (
-                    <ArrowLeftIcon width={14} />
-                  ) : (
-                    <ArrowLeftIcon width={14} />
-                  )}
-                  <span>Back</span>
-                </div>
-              </Button>
-              <Button
-                onClick={onNextPage}
-                disabled={currentPage * perPage >= data?.length}
+          <tbody className="divide-y divide-slate-100" key={currentPage}>
+            {sliced?.length === 0 && (
+              <tr>
+                <td
+                  colSpan={tableHeader.length}
+                  className="px-5 py-12 text-center text-sm text-slate-400"
+                >
+                  Nema podataka
+                </td>
+              </tr>
+            )}
+            {sliced?.map((item, idx) => (
+              <tr
+                key={idx}
+                className="group transition-colors duration-100 hover:bg-teal-50/40"
               >
-                <div className="flex gap-1.5">
-                  <span>Next</span>
-                  {currentPage * perPage >= data?.length ? (
-                    <ArrowRightIcon width={14} />
-                  ) : (
-                    <ArrowRightIcon width={14} />
-                  )}
-                </div>
-              </Button>
-            </div>
-          ) : null}
+                {tableHeader?.map((col, i) =>
+                  col?.show === false ? null : (
+                    <td
+                      key={i}
+                      className={classNames(
+                        col?.sticky
+                          ? "sticky right-0 bg-white group-hover:bg-teal-50/40"
+                          : "",
+                        "relative whitespace-nowrap px-5 py-3 text-sm text-slate-700",
+                      )}
+                      style={{ zIndex: col?.sticky ? perPage * 2 - idx : "" }}
+                    >
+                      {col?.sticky ? (
+                        <div className="absolute left-0 top-0 h-full w-px bg-slate-100" />
+                      ) : null}
+                      {item
+                        ? typeof col?.render === "function"
+                          ? col?.accessor !== "*"
+                            ? col?.render(item[col?.accessor])
+                            : col?.render(item)
+                          : item[col?.accessor]
+                        : null}
+                    </td>
+                  ),
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {(data?.length > perPage || totalElements > perPage) && !loading ? (
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-sm text-slate-500">
+            Stranica {currentPage} od {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onPreviousPage}
+              disabled={currentPage <= 1}
+            >
+              <ArrowLeftIcon className="h-3.5 w-3.5" />
+              <span>Nazad</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onNextPage}
+              disabled={currentPage * perPage >= data?.length}
+            >
+              <span>Naprijed</span>
+              <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
       ) : null}
     </>

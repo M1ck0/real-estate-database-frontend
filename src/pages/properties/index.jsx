@@ -19,7 +19,14 @@ const header = [
   {
     name: "Ime",
     accessor: "*",
-    render: (data) => <Link to={`/properties/${data?.id}`}>{data?.title}</Link>,
+    render: (data) => (
+      <Link
+        to={`/properties/${data?.id}`}
+        className="font-medium text-teal-700 hover:underline"
+      >
+        {data?.title}
+      </Link>
+    ),
   },
   { name: "Lokacija", accessor: "locations", render: (data) => data?.name },
   {
@@ -74,8 +81,11 @@ const header = [
     name: "Akcije",
     accessor: "*",
     render: (data) => (
-      <Link to={`/properties/edit/${data?.id}`} className="text-blue-500">
-        <PencilSquareIcon className="size-6" />
+      <Link
+        to={`/properties/edit/${data?.id}`}
+        className="inline-flex items-center justify-center rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+      >
+        <PencilSquareIcon className="size-4" />
       </Link>
     ),
   },
@@ -96,14 +106,14 @@ const Properties = ({ rent, sale }) => {
 
   return (
     <div>
-      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-0">
-        <PageTitle>Nekretnine</PageTitle>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <PageTitle subtitle={`${filtered?.length ?? 0} nekretnina`}>Nekretnine</PageTitle>
         <Link to="/properties/new">
           <Button>Kreiraj novu nekretninu</Button>
         </Link>
       </div>
-      <div className="mb-5 w-[300px]">
-        <Input label="Pretraga" placeholder="Text..." onChange={setSearchText} />
+      <div className="mb-5 max-w-xs">
+        <Input placeholder="Pretraga nekretnina..." onChange={setSearchText} />
       </div>
       <Table
         key={filtered?.length}

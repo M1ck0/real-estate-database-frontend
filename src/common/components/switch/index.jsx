@@ -24,7 +24,7 @@ const Switch = ({ value, label, onChange = () => {} }) => {
       <S
         checked={enabled}
         onChange={onSwitch}
-        className="group relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
+        className="group relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2 data-[checked]:bg-teal-600"
       >
         <span
           aria-hidden="true"

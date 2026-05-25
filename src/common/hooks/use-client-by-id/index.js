@@ -8,7 +8,7 @@ const useClientById = (id) => {
   const getData = async () => {
     const { data: clientPreferences } = await supabase
       .from("client_preferences")
-      .select("*, location(*)")
+      .select("*, client_preference_locations(locations(*))")
       .eq("client", id)
       .single();
 

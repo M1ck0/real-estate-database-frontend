@@ -10,32 +10,23 @@ import "./layout.css";
 
 const Layout = () => {
   return (
-    <div className="layout">
-      <Sidebar routes={routes}>
-        <Routes>
-          {routes?.map((route) => {
-            return (
-              <>
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={<route.component />}
-                  exact
-                />
-                {route?.routes?.map((subRoute) => (
-                  <Route
-                    key={subRoute.path}
-                    path={subRoute.path}
-                    element={<subRoute.component />}
-                    exact
-                  />
-                ))}
-              </>
-            );
-          })}
-        </Routes>
-      </Sidebar>
-    </div>
+    <Sidebar routes={routes}>
+      <Routes>
+        {routes?.map((route) => (
+          <React.Fragment key={route.path}>
+            <Route path={route.path} element={<route.component />} exact />
+            {route?.routes?.map((subRoute) => (
+              <Route
+                key={subRoute.path}
+                path={subRoute.path}
+                element={<subRoute.component />}
+                exact
+              />
+            ))}
+          </React.Fragment>
+        ))}
+      </Routes>
+    </Sidebar>
   );
 };
 

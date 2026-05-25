@@ -32,7 +32,8 @@ const CreateClient = () => {
         phone: client?.client?.phone_number,
         minPrice: client?.min_price || "0",
         maxPrice: client?.max_price,
-        location: client?.location?.id,
+        locations:
+          client?.client_preference_locations?.map((cpl) => cpl?.locations?.id) || [],
         type: client?.type,
         status: client?.status,
         building: client?.building,
@@ -43,8 +44,35 @@ const CreateClient = () => {
     }
   }, [client]);
 
+  const saveLocations = async (prefId, locations) => {
+    await supabase
+      .from("client_preference_locations")
+      .delete()
+      .eq("client_preference_id", prefId);
+
+    if (locations?.length) {
+      await supabase.from("client_preference_locations").insert(
+        locations.map((loc) => ({
+          client_preference_id: prefId,
+          location_id: loc?.value,
+        })),
+      );
+    }
+  };
+
   const onSubmit = async (values) => {
     setLoading(true);
+    const prefFields = {
+      bathrooms: values?.bathrooms || 0,
+      bedrooms: values?.bedrooms || 0,
+      floor: values?.floor,
+      building: values?.building?.value,
+      min_price: values?.minPrice,
+      max_price: values?.maxPrice,
+      status: values?.status?.value?.toLowerCase() || "rent",
+      type: values?.type?.value?.toLowerCase() || "house",
+    };
+
     if (clientId) {
       await supabase
         .from("clients")
@@ -60,39 +88,22 @@ const CreateClient = () => {
       if (preferences) {
         const { error } = await supabase
           .from("client_preferences")
-          .update({
-            bathrooms: values?.bathrooms || 0,
-            bedrooms: values?.bedrooms || 0,
-            floor: values?.floor,
-            building: values?.building?.value,
-            location: values?.location?.value,
-            min_price: values?.minPrice,
-            max_price: values?.maxPrice,
-            status: values?.status?.value?.toLowerCase() || "rent",
-            type: values?.type?.value?.toLowerCase() || "house",
-          })
+          .update(prefFields)
           .eq("client", clientId);
 
         if (!error) {
+          await saveLocations(preferences?.id, values?.locations);
           navigate("/clients");
         }
       } else {
-        const { error } = await supabase.from("client_preferences").insert([
-          {
-            client: clientId,
-            bathrooms: values?.bathrooms || 0,
-            bedrooms: values?.bedrooms || 0,
-            floor: values?.floor,
-            location: values?.location?.value,
-            min_price: values?.minPrice,
-            max_price: values?.maxPrice,
-            building: values?.building?.value,
-            status: values?.status?.value?.toLowerCase() || "rent",
-            type: values?.type?.value?.toLowerCase() || "house",
-          },
-        ]);
+        const { data: newPref, error } = await supabase
+          .from("client_preferences")
+          .insert([{ client: clientId, ...prefFields }])
+          .select()
+          .single();
 
         if (!error) {
+          await saveLocations(newPref?.id, values?.locations);
           navigate("/clients");
         }
       }
@@ -103,22 +114,14 @@ const CreateClient = () => {
         .select()
         .single();
 
-      const { error } = await supabase.from("client_preferences").insert([
-        {
-          client: client?.id,
-          bathrooms: values?.bathrooms || 0,
-          bedrooms: values?.bedrooms || 0,
-          floor: values?.floor,
-          location: values?.location?.value,
-          min_price: values?.minPrice,
-          max_price: values?.maxPrice,
-          building: values?.building?.value,
-          status: values?.status?.value?.toLowerCase() || "rent",
-          type: values?.type?.value?.toLowerCase() || "house",
-        },
-      ]);
+      const { data: newPref, error } = await supabase
+        .from("client_preferences")
+        .insert([{ client: client?.id, ...prefFields }])
+        .select()
+        .single();
 
       if (!error) {
+        await saveLocations(newPref?.id, values?.locations);
         navigate("/clients");
       }
     }
